@@ -1,0 +1,19 @@
+using UnityEngine;
+
+public class ContainerCounter : MonoBehaviour, IInteractable   // √Ê Interactable ·Ê Â–« «”„ Ê«ÃÂ ﬂ
+{
+    [SerializeField] private string promptText = "Press E to Open";
+
+    // ·«“„ public Ê‰›” «· ÊﬁÌ⁄  „«„«
+    public void Interact()
+    {
+        Debug.Log($"ContainerCounter: Interact by ");
+        // „‰ÿﬁ «·› Õ/«·√Œ–...
+    }
+
+    public string GetPrompt()   
+    {
+        return promptText;
+    }
+}
+
