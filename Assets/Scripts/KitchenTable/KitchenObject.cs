@@ -45,4 +45,19 @@ public IKitchenObjectParant GetClearCounter()
     {
         return kitchenObjectParant;
     }
+
+    public void DestroySelf()
+    {
+        kitchenObjectParant.ClearKitchenObject();
+        Destroy(gameObject);
+    }
+
+    public static KitchenObject SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParant kitchenObjectParant)
+    {
+        Transform kitchenObjectTransform = Instantiate(kitchenObjectSO.prefab);
+        KitchenObject kitchenObject = kitchenObjectTransform.GetComponent<KitchenObject>();
+        kitchenObject.SetKitchenObjectParent(kitchenObjectParant);
+        return kitchenObject;
+    }
+
 }
