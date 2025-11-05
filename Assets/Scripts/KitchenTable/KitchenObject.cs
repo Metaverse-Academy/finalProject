@@ -5,29 +5,43 @@ public class KitchenObject : MonoBehaviour
     [SerializeField] private KitchenObjectSO kitchenObjectSO;
 
     private IKitchenObjectParant kitchenObjectParant;
+
     public KitchenObjectSO GetKitchenObjectSO()
     {
         return kitchenObjectSO;
     }
 
-    public void SetKitchenObjectParent(IKitchenObjectParant KitchenObjectParant)
+    // KitchenObject.cs
+    public void SetKitchenObjectParent(IKitchenObjectParant target)
     {
-        if (this.kitchenObjectParant != null)
-        {
-            this.kitchenObjectParant.ClearKitchenObject();
-        }
-        if (KitchenObjectParant.HasKitchenObject())
-        {
-            Debug.LogError("Counter already has a kitchen object!");
-        }
-        this.kitchenObjectParant = KitchenObjectParant;
-        KitchenObjectParant.SetKitchenObject(this);
+        if (target == null) { Debug.LogError("Target is null."); return; }
+        if (ReferenceEquals(target, kitchenObjectParant)) return;
 
-        transform.parent = KitchenObjectParant.GetKitchenObjectFollowTransform();
+        // ÇáåÏÝ ãÔÛæá¿ áÇ Êõßãá
+        if (target.HasKitchenObject())
+        {
+            Debug.LogWarning("Target already has a kitchen object. Abort move.");
+            return;
+        }
+
+        var oldParent = kitchenObjectParant;
+
+        // ÇÑÈØ ÈÇáÌÏíÏ ÃæáÇð (íÖãä ÊãÇÓß ÇáÍÇáÉ)
+        kitchenObjectParant = target;
+        target.SetKitchenObject(this);
+
+        // Ýßø ÇáÞÏíã ÇáÂä ÝÞØ
+        oldParent?.ClearKitchenObject();
+
+        // ÇäÞá ÇáÊÍæíá
+        transform.SetParent(target.GetKitchenObjectFollowTransform(), worldPositionStays: false);
         transform.localPosition = Vector3.zero;
     }
 
-    public IKitchenObjectParant GetClearCounter()
+    public IKitchenObjectParant GetParent() => kitchenObjectParant;
+
+
+public IKitchenObjectParant GetClearCounter()
     {
         return kitchenObjectParant;
     }

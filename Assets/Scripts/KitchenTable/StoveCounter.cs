@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class StoveCounter : MonoBehaviour, IInteractable
+public class StoveCounter : MonoBehaviour
 {
     public void Interact()
     {

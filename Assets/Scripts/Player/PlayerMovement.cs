@@ -10,12 +10,12 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private float interactRange = 2f;
     private Vector3 lastIntaractinDir;
-    [SerializeField] private LayerMask counterLayerMask;
-    private ClearCounterInteraction SelectedCounter;
+    [SerializeField] private LayerMask interactLayerMask;
+    private IInteractable SelectedCounter;
     public event EventHandler<SelectedCounterChangedEventArgs> OnSelectedCounterChanged;
     public class SelectedCounterChangedEventArgs : EventArgs
     {
-        public ClearCounterInteraction selectedCounter;
+        public IInteractable selectedCounter;
     }
     private KitchenObject kitchenObject;
     [SerializeField] private Transform holdPoint;         // äŞØÉ ÇáíÏ
@@ -84,17 +84,18 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
         {
             lastIntaractinDir = transform.forward;
         }
-        if (Physics.Raycast(transform.position, lastIntaractinDir, out RaycastHit raycastHit, interactRange, counterLayerMask))
+        if (Physics.Raycast(transform.position, lastIntaractinDir, out RaycastHit raycastHit, interactRange, interactLayerMask))
         {
-            if (raycastHit.transform.TryGetComponent(out ClearCounterInteraction clearCounter))
+            if (raycastHit.transform.TryGetComponent(out IInteractable BaseCounter))
             {
                 // has clear counter
-                clearCounter.Interact(this); // ÇáÂä this íØÈøŞ IKitchenObjectParant¡ İíãÑø ÈÏæä ÎØÃ
-                if (clearCounter != SelectedCounter) 
+               BaseCounter.Interact(this); // ÇáÂä this íØÈøŞ IKitchenObjectParant¡ İíãÑø ÈÏæä ÎØÃ
+                if (SelectedCounter !=null) 
                 {
-                    SetSelectedCounter(clearCounter);
+                    BaseCounter.Interact(this); // ÇáÂä this íØÈøŞ IKitchenObjectParant¡ İíãÑø ÈÏæä ÎØÃ
                 }
-            }else
+            }
+            else
             {
                  SetSelectedCounter(null);
             }
@@ -193,17 +194,19 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
     }
 
 
+    [SerializeField] private float interactCooldown = 0.15f;
+    private float nextInteractTime = 0f;
+    // ...
     public void OnInteract(InputAction.CallbackContext ctx)
     {
-        Debug.Log("Interact pressed");
-        //if (SelectedCounter != null)
-        //{
-        //    SelectedCounter.Interact();
-        //}
-        HandelInteraction();
+        if (!ctx.performed) return;
+        if (Time.time < nextInteractTime) return;   // ÊÈÑíÏ ÈÓíØ
+        nextInteractTime = Time.time + interactCooldown;
+
+        HandelInteraction(); // ÇÓÊÏÚÇÁ æÇÍÏ äÙíİ
     }
 
-    private void SetSelectedCounter(ClearCounterInteraction selectedCounter)
+    private void SetSelectedCounter(IInteractable selectedCounter)
     {
         this.SelectedCounter = selectedCounter;
         OnSelectedCounterChanged?.Invoke(this, new SelectedCounterChangedEventArgs

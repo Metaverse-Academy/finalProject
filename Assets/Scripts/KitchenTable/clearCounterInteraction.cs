@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem; // <-- الجديد
 
-public class ClearCounterInteraction : MonoBehaviour, IKitchenObjectParant
+public class ClearCounterInteraction : IInteractable, IKitchenObjectParant
 {
     [SerializeField] private KitchenObjectSO kitchenObjectSO;
     [SerializeField] private Transform CounterTopPoint;
@@ -48,43 +48,48 @@ public class ClearCounterInteraction : MonoBehaviour, IKitchenObjectParant
     }
 
 
-    // كان: public void Interact(PlayerMovement player)
-    // كان: public void Interact(PlayerMovement player)
-    public void Interact(IKitchenObjectParant interactor)
+    public override void Interact(PlayerMovement interactor)
     {
-        // لو ما فيه عنصر على الكاونتر → سباون فقط
-        if (!HasKitchenObject())
+        // 1) الطاولة عليها عنصر؟
+        if (HasKitchenObject())
         {
-            // سباون آمن + حمايات null
-            if (kitchenObjectSO == null || kitchenObjectSO.prefab == null || CounterTopPoint == null)
+            // اللاعب فاضي -> خذ من الطاولة
+            if (!interactor.HasKitchenObject())
             {
-                Debug.LogError($"[{name}] Setup missing (SO/prefab/counterTopPoint).");
-                return;
+                GetKitchenObject().SetKitchenObjectParent(interactor);
             }
-
-            var t = Instantiate(kitchenObjectSO.prefab, CounterTopPoint.position, CounterTopPoint.rotation);
-            if (!t.TryGetComponent(out KitchenObject ko))
+            else
             {
-                Debug.LogError($"[{name}] Spawned prefab has no KitchenObject component.");
-                Destroy(t.gameObject);
-                return;
+                // الطرفان مشغولان -> لا شيء (لا سواپ حالياً)
+                // Debug.Log("Both holding; no action.");
             }
-
-            // ضعها على الكاونتر (واجهتك/منطقك الحالي)
-            ko.SetKitchenObjectParent(this); // أو ko.SetClearCounter(this) بحسب كلاس KitchenObject عندك
             return;
         }
 
-        // فيه عنصر على الكاونتر:
-        // لو الـinteractor (اللاعب) فاضي → أعطه العنصر
-        if (!interactor.HasKitchenObject())
+        // 2) الطاولة فاضية
+        if (interactor.HasKitchenObject())
         {
-            GetKitchenObject().SetKitchenObjectParent(interactor); // أو SetClearCounter(interactor) إذا تستخدم المنهج القديم
+            // اللاعب ماسك -> حط عنصر اللاعب على الطاولة
+            interactor.GetKitchenObject().SetKitchenObjectParent(this);
+            return;
         }
-        else
+
+        // 3) الطاولة فاضية + اللاعب فاضي -> اسبن أول عنصر على الطاولة
+        if (kitchenObjectSO == null || kitchenObjectSO.prefab == null || CounterTopPoint == null)
         {
-            Debug.Log("Interactor already holding something.");
+            Debug.LogError($"[{name}] Setup missing (SO/prefab/CounterTopPoint).");
+            return;
         }
+
+        var t = Instantiate(kitchenObjectSO.prefab, CounterTopPoint.position, CounterTopPoint.rotation);
+        if (!t.TryGetComponent(out KitchenObject ko))
+        {
+            Debug.LogError($"[{name}] Spawned prefab has no KitchenObject component.");
+            Destroy(t.gameObject);
+            return;
+        }
+
+        ko.SetKitchenObjectParent(this);   // يضبط الأب والموضع ويحدّث الحالة
     }
 
 
@@ -163,7 +168,4 @@ public class ClearCounterInteraction : MonoBehaviour, IKitchenObjectParant
     {
         return kitchenObject != null;
     }
-
-
-    public string GetPrompt() => "Press E to Clear";
 }

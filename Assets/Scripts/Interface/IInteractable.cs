@@ -1,7 +1,11 @@
 using UnityEngine;
 
-public interface IInteractable
-{
-    void Interact();
-    string GetPrompt();
+public class IInteractable : MonoBehaviour {
+
+    
+   public virtual void Interact(PlayerMovement player)
+    {
+        Debug.LogError("Interacted with " + gameObject.name);
+    }
+    
 }

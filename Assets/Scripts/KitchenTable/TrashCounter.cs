@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TrashCounter : MonoBehaviour, IInteractable
+public class TrashCounter : MonoBehaviour
 {
     public void Interact()
     {

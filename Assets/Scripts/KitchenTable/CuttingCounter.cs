@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CuttingCounter : MonoBehaviour, IInteractable
+public class CuttingCounter : MonoBehaviour
 {
     public void Interact()
     {
