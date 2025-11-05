@@ -4,11 +4,15 @@
 TagManager:
   serializedVersion: 3
   tags:
+<<<<<<< Updated upstream
   - CuttingCounter
   - ClearCounter
   - ContainerCounter
   - StoveCounter
   - TrashCounter
+=======
+  - ShoppingCart
+>>>>>>> Stashed changes
   layers:
   - Default
   - TransparentFX
@@ -16,8 +20,13 @@ TagManager:
   - Ground
   - Water
   - UI
+<<<<<<< Updated upstream
   - ClearCounter
   - ContainerCounter
+=======
+  - Cart Layer
+  - 
+>>>>>>> Stashed changes
   - 
   - 
   - 
