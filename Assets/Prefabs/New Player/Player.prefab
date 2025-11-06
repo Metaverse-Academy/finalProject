@@ -174,6 +174,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: c725e9b5-32ea-486f-97fe-121309bd4347
     m_ActionName: 'Player/Interact[/Keyboard/e]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3482029907664478384}
+        m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
+        m_MethodName: OnInteractAlternate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: c81a4f90-02ec-4f6a-8ee9-ae17746a0288
+    m_ActionName: 'Player/InteractAlternate[/Keyboard/f]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Player
@@ -209,9 +225,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   cameraTransform: {fileID: 7313803211659929785}
   interactRange: 2
-  counterLayerMask:
+  interactLayerMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
+  holdPoint: {fileID: 0}
   walkSpeed: 5
   acceleration: 12
   sprintSpeed: 9
@@ -227,6 +244,7 @@ MonoBehaviour:
   crouchHeight: 0.25
   playerInput: {fileID: 0}
   clearCounterInteraction: {fileID: 0}
+  interactCooldown: 0.15
 --- !u!135 &4016355777686484668
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -439,7 +457,7 @@ Transform:
   m_GameObject: {fileID: 4036941474139068889}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.34, y: 0.09130001, z: 0.44}
+  m_LocalPosition: {x: 0.42, y: 0.267, z: 0.619}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

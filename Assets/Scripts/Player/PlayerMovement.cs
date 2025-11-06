@@ -49,7 +49,7 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
     private bool isGrounded;
     private bool isSprinting;
     private bool isCrouching;
-    public ClearCounterInteraction clearCounterInteraction;
+    public clearCounterInteraction clearCounterInteraction;
 
 
     private void Awake()
@@ -77,31 +77,52 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
 
     private void HandelInteraction()
     {
-        //ÊÚÏíá áæ ÈäÓÊÎÏã ÇáßÇãíÑÇ
-        //Physics.Raycast(cameraTransform.position, cameraTransform.forward, out var hit, interactRange,
-        //                    ~0, QueryTriggerInteraction.Collide);
-        if (transform.forward != Vector3.zero)
+        if (moveInput != Vector2.zero)
         {
             lastIntaractinDir = transform.forward;
         }
+
         if (Physics.Raycast(transform.position, lastIntaractinDir, out RaycastHit raycastHit, interactRange, interactLayerMask))
         {
-            if (raycastHit.transform.TryGetComponent(out IInteractable BaseCounter))
+            if (raycastHit.transform.TryGetComponent(out IInteractable interactableCounter))
             {
-                // has clear counter
-               BaseCounter.Interact(this); // ÇáÂä this íØÈøŞ IKitchenObjectParant¡ İíãÑø ÈÏæä ÎØÃ
-                if (SelectedCounter !=null) 
+                // ÊÍÏíË ÇáÜ Selected Counter
+                if (SelectedCounter != interactableCounter)
                 {
-                    BaseCounter.Interact(this); // ÇáÂä this íØÈøŞ IKitchenObjectParant¡ İíãÑø ÈÏæä ÎØÃ
+                    SetSelectedCounter(interactableCounter);
                 }
             }
             else
             {
-                 SetSelectedCounter(null);
+                SetSelectedCounter(null);
             }
-        }else
+        }
+        else
         {
             SetSelectedCounter(null);
+        }
+
+        // ÊäİíĞ ÇáÊİÇÚá ãÚ ÇáÜ Selected Counter
+        if (SelectedCounter != null)
+        {
+            SelectedCounter.Interact(this);
+        }
+    }
+    private void HandelInteractAlternate()
+    {
+        if (moveInput != Vector2.zero)
+        {
+            lastIntaractinDir = transform.forward;
+        }
+        
+
+        if (Physics.Raycast(transform.position, lastIntaractinDir, out RaycastHit raycastHit, interactRange, interactLayerMask))
+        {
+            if (raycastHit.transform.TryGetComponent(out IInteractable interactableCounter))
+            {
+                interactableCounter.InteractAlterante(this);
+                Debug.Log($"Interact Alternate with: {raycastHit.transform.name}");
+            }
         }
     }
 
@@ -205,6 +226,21 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
 
         HandelInteraction(); // ÇÓÊÏÚÇÁ æÇÍÏ äÙíİ
     }
+
+
+    public void OnInteractAlternate(InputAction.CallbackContext ctx)
+    {
+        Debug.Log($"Interact Alternate pressed: {ctx.phase}");
+
+        if (!ctx.performed) return;
+        if (Time.time < nextInteractTime) return;
+        nextInteractTime = Time.time + interactCooldown;
+
+        Debug.Log("Handling Interact Alternate");
+        HandelInteractAlternate();
+    }
+
+
 
     private void SetSelectedCounter(IInteractable selectedCounter)
     {
