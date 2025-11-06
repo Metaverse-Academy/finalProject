@@ -703,6 +703,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5715484976129302923, guid: 7d1cd406a14dfd94193b01555e0cc70f, type: 3}
+      propertyPath: mode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6854892429872197487, guid: 7d1cd406a14dfd94193b01555e0cc70f, type: 3}
       propertyPath: cuttingCounter
       value: 
