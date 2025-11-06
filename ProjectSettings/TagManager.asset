@@ -3,30 +3,16 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags:
-<<<<<<< Updated upstream
-  - CuttingCounter
-  - ClearCounter
-  - ContainerCounter
-  - StoveCounter
-  - TrashCounter
-=======
-  - ShoppingCart
->>>>>>> Stashed changes
+  tags: []
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Ground
+  - 
   - Water
   - UI
-<<<<<<< Updated upstream
-  - ClearCounter
-  - ContainerCounter
-=======
-  - Cart Layer
   - 
->>>>>>> Stashed changes
+  - 
   - 
   - 
   - 
@@ -57,10 +43,3 @@ TagManager:
     locked: 0
   m_RenderingLayers:
   - Default
-  - Light Layer 1
-  - Light Layer 2
-  - Light Layer 3
-  - Light Layer 4
-  - Light Layer 5
-  - Light Layer 6
-  - Light Layer 7
