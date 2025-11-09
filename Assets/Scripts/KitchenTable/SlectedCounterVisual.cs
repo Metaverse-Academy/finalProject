@@ -7,24 +7,24 @@ public class SlectedCounterVisual : MonoBehaviour
    
     private void Start()
     {
-        //PlayerMovement playerMovement = FindFirstObjectByType<PlayerMovement>();
-        //if (playerMovement != null)
-        //{
-        //    playerMovement.OnSelectedCounterChanged += Player_OnSelectedCounterChanged;
-        //}
+        PlayerMovement playerMovement = FindFirstObjectByType<PlayerMovement>();
+        if (playerMovement != null)
+        {
+            playerMovement.OnSelectedCounterChanged += Player_OnSelectedCounterChanged;
+        }
     }
 
-    //private void Player_OnSelectedCounterChanged(object sender, PlayerMovement.SelectedCounterChangedEventArgs e)
-    //{
-    //    if (e.selectedCounter == baseCounter)
-    //    {
-    //        Show();
-    //    }
-    //    else
-    //    {
-    //        Hide();
-    //    }
-    //}
+    private void Player_OnSelectedCounterChanged(object sender, PlayerMovement.SelectedCounterChangedEventArgs e)
+    {
+        if (e.selectedCounter == baseCounter)
+        {
+            Show();
+        }
+        else
+        {
+            Hide();
+        }
+    }
 
     private void Show()
     {
