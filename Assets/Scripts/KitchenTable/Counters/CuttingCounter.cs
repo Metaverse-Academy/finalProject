@@ -6,6 +6,8 @@ public class CuttingCounter : BaseCounter, IHasProgress
     public event EventHandler<IHasProgress.OnProgressChangeEventArgs> OnProgressChange;
     
     public event EventHandler OnCut;
+    public AudioSource audioSource;
+    public AudioClip cutSound;
 
     [SerializeField] private CuttingRecipesSO[] cuttingRecipesSOsArray;
     private int cuttingProgress;
@@ -62,6 +64,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
 
             cuttingProgress++;
             OnCut?.Invoke(this, EventArgs.Empty);
+            audioSource.PlayOneShot(cutSound);
 
             CuttingRecipesSO cuttingRecipeSO = GetCuttingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
 

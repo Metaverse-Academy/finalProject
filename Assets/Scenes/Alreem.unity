@@ -1413,13 +1413,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6949511775169908635, guid: f35845eb9045a4345a7797b95cd4ae0d, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f35845eb9045a4345a7797b95cd4ae0d, type: 3}
+--- !u!1 &1130114436 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6949511775169908635, guid: f35845eb9045a4345a7797b95cd4ae0d, type: 3}
+  m_PrefabInstance: {fileID: 1130114435}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1176102710
 GameObject:
   m_ObjectHideFlags: 0
@@ -1450,8 +1455,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54272ed9688570d4b8f0da590e397241, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerJointManger
-  player1Prefab: {fileID: 2351289109526889326}
-  player2Prefab: {fileID: 2351289109526889326}
+  player1Prefab: {fileID: 1130114436}
+  player2Prefab: {fileID: 1130114436}
   spawnPoints:
   - {fileID: 4953881680625245343}
   - {fileID: 4953881680625245343}
@@ -1505,7 +1510,7 @@ MonoBehaviour:
       m_Flags: 0
     m_Reference: {fileID: 0}
   m_PlayerPrefab: {fileID: 0}
-  m_SplitScreen: 0
+  m_SplitScreen: 1
   m_MaintainAspectRatioInSplitScreen: 0
   m_FixedNumberOfSplitScreens: -1
   m_SplitScreenRect:
@@ -2034,17 +2039,12 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3482029907664478384, guid: 76dfdfd287cb81241a59234cf442f8cd, type: 3}
   m_PrefabInstance: {fileID: 5461743745184147835}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2351289109526889326}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc5a024d155c8794fa4cef4b3791baf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
---- !u!1 &2351289109526889326 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2791952337511508413, guid: 76dfdfd287cb81241a59234cf442f8cd, type: 3}
-  m_PrefabInstance: {fileID: 5461743745184147835}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4953881680625245343 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6972084449635147468, guid: 76dfdfd287cb81241a59234cf442f8cd, type: 3}
