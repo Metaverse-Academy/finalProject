@@ -54,7 +54,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
         }
     }
 
-    public override void InteractAlterante(PlayerMovement player)
+    public override void InteractAlternate(PlayerMovement player)
     {
         if (HasKitchenObject() && HasRecipeWithInput(GetKitchenObject().GetKitchenObjectSO()))
         {

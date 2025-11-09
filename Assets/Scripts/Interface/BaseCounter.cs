@@ -1,7 +1,7 @@
-// BaseCounter.cs
+﻿// BaseCounter.cs
 using UnityEngine;
 
-public class BaseCounter : MonoBehaviour, IKitchenObjectParant
+public class BaseCounter : MonoBehaviour, IInteractable, IKitchenObjectParant
 {
     [SerializeField] private Transform counterTopPoint;
 
@@ -11,9 +11,9 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParant
     {
         Debug.LogError("Interact method not implemented in " + gameObject.name);
     }
-    public virtual void InteractAlterante(PlayerMovement player)
+    public virtual void InteractAlternate(PlayerMovement player) // ✅ صحح الإسم
     {
-        Debug.LogError("Interact method not implemented in " + gameObject.name);
+        Debug.LogError("InteractAlternate method not implemented in " + gameObject.name);
     }
 
     public Transform GetKitchenObjectFollowTransform() => counterTopPoint;
