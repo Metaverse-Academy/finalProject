@@ -583,7 +583,7 @@ MonoBehaviour:
   jumpForce: 5
   groundLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
   groundDistanceCheck: 0.3
   rayStartOffset: 0.06
   useToggleCrouch: 1
@@ -608,7 +608,7 @@ MonoBehaviour:
   interactDistance: 3
   interactableLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 0
   showDebugRay: 0
   fadeDuration: 0.2
   scalePop: 1.1
