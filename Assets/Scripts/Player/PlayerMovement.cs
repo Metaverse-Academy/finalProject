@@ -144,9 +144,9 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
         float targetSpeed = isCrouching ? crouchSpeed : (isSprinting ? sprintSpeed : walkSpeed);
         Vector3 targetVelH = planarMoveDir * targetSpeed;
 
-        float RotationSpeed = 10f;
-        Vector3 moveDir = new Vector3(targetVelH.x, 0f, targetVelH.z);
-        transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * RotationSpeed);
+        //float RotationSpeed = 10f;
+        //Vector3 moveDir = new Vector3(targetVelH.x, 0f, targetVelH.z);
+        //transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * RotationSpeed);
 
         Vector3 v = rb.linearVelocity;
         Vector3 vH = Vector3.Lerp(new Vector3(v.x, 0f, v.z), targetVelH, acceleration * Time.fixedDeltaTime);
