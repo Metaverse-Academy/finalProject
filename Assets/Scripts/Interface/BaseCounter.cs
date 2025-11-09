@@ -1,7 +1,7 @@
 // BaseCounter.cs
 using UnityEngine;
 
-public class BaseCounter : MonoBehaviour, IInteractable, IKitchenObjectParant
+public class BaseCounter : MonoBehaviour, IKitchenObjectParant
 {
     [SerializeField] private Transform counterTopPoint;
 
