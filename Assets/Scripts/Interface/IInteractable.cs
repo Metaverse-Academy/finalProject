@@ -1,7 +1,5 @@
-using UnityEngine;
-
 public interface IInteractable
 {
-    void Interact(GameObject interactor);
-    string GetPrompt();
+    void Interact(PlayerMovement player);
+    void InteractAlterante(PlayerMovement player);
 }
