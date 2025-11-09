@@ -7,4 +7,5 @@ public interface IKitchenObjectParant
     KitchenObject GetKitchenObject();
     void ClearKitchenObject();
     bool HasKitchenObject();
+
 }

@@ -4,7 +4,7 @@ public class SlectedCounterVisual : MonoBehaviour
 {
     [SerializeField] private IInteractable baseCounter;
     [SerializeField] private GameObject[] visualGameObjectArray;
-
+   
     private void Start()
     {
         PlayerMovement playerMovement = FindFirstObjectByType<PlayerMovement>();
