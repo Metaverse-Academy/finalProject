@@ -1,44 +1,88 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using TMPro;
 
 public class PlayerInteraction : MonoBehaviour
 {
-    //[SerializeField] private string[] counterTags =
-    //{
-    //    "CuttingCounter", "ClearCounter", "ContainerCounter", "StoveCounter", "TrashCounter"
-    //};
+    [Header("References")]
+    [SerializeField] private Transform cameraTransform;
+    [SerializeField] private CanvasGroup promptCanvas;
+    [SerializeField] private TMP_Text promptText;
 
-    //private HashSet<string> tagSet;
+    [Header("Settings")]
+    [SerializeField] private float interactDistance = 3f;
+    [SerializeField] private LayerMask interactableLayer;
+    [SerializeField] private bool showDebugRay = false;
+    [SerializeField] private float fadeDuration = 0.2f;
+    [SerializeField] private float scalePop = 1.1f;
 
-    //private void Awake()
-    //{
-    //    tagSet = new HashSet<string>(counterTags);
-    //}
+    private IInteractable currentTarget;
+    private bool promptVisible;
 
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    var go = collision.gameObject;
-    //    if (!tagSet.Contains(go.tag)) return;
+    private void Awake()
+    {
+        if (promptCanvas)
+        {
+            promptCanvas.alpha = 0f;
+            promptCanvas.transform.localScale = Vector3.one;
+        }
+    }
 
-    //    var interactable =
-    //        collision.collider.GetComponentInParent<IInteractable>() ??
-    //        collision.collider.GetComponentInChildren<IInteractable>();
+    private void Update()
+    {
+        Vector3 origin = cameraTransform.position;
+        Vector3 dir = cameraTransform.forward;
 
-    //    if (interactable != null) interactable.Interact(); // ✅
-    //    else Debug.LogWarning($"No IInteractable on {go.name}");
-    //}
+        if (Physics.Raycast(origin, dir, out RaycastHit hit, interactDistance, interactableLayer))
+        {
+            if (hit.collider.TryGetComponent<IInteractable>(out IInteractable interactable))
+            {
+                currentTarget = interactable;
+                ShowPrompt(interactable.GetPrompt());
+            }
+            else HidePrompt();
+        }
+        else HidePrompt();
 
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    var go = other.gameObject;
-    //    if (!tagSet.Contains(go.tag)) return;
+        if (showDebugRay)
+            Debug.DrawRay(origin, dir * interactDistance, currentTarget != null ? Color.green : Color.red);
+    }
 
-    //    var interactable =
-    //        other.GetComponentInParent<IInteractable>() ??
-    //        other.GetComponentInChildren<IInteractable>();
+    private void ShowPrompt(string text)
+    {
+        if (!promptCanvas) return;
 
-    //    //if (interactable != null) interactable.Interact(this); // ✅
-    //    else Debug.LogWarning($"No IInteractable on {go.name}");
-    //}
+        promptText.text = text;
+
+        if (!promptVisible)
+        {
+            promptVisible = true;
+
+            LeanTween.cancel(promptCanvas.gameObject);
+            promptCanvas.transform.localScale = Vector3.one * 0.8f;
+
+            LeanTween.scale(promptCanvas.gameObject, Vector3.one * scalePop, fadeDuration).setEaseOutBack();
+            LeanTween.alphaCanvas(promptCanvas, 1f, fadeDuration);
+        }
+    }
+
+    private void HidePrompt()
+    {
+        if (!promptCanvas || !promptVisible) return;
+
+        promptVisible = false;
+
+        LeanTween.cancel(promptCanvas.gameObject);
+        LeanTween.scale(promptCanvas.gameObject, Vector3.one * 0.8f, fadeDuration).setEaseInBack();
+        LeanTween.alphaCanvas(promptCanvas, 0f, fadeDuration);
+    }
+
+    // --- Input System ---
+    public void OnInteract(InputAction.CallbackContext ctx)
+    {
+        if (ctx.performed && currentTarget != null)
+        {
+            currentTarget.Interact(gameObject);
+        }
+    }
 }
-
