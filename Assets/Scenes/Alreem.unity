@@ -141,6 +141,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ContainerCounter_Bread
       objectReference: {fileID: 0}
+    - target: {fileID: 2792149636813830318, guid: d42638fb5da406748952d2dba3e84a47, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
     - target: {fileID: 6482217648908625046, guid: d42638fb5da406748952d2dba3e84a47, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.52
@@ -181,6 +185,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8327984953648530372, guid: d42638fb5da406748952d2dba3e84a47, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -198,6 +206,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ContainerCounter_Lettuce
       objectReference: {fileID: 0}
+    - target: {fileID: 2792149636813830318, guid: f6d8be7810694f24daef2bcc36f24c01, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
     - target: {fileID: 6482217648908625046, guid: f6d8be7810694f24daef2bcc36f24c01, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.55178154
@@ -238,6 +250,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8327984953648530372, guid: f6d8be7810694f24daef2bcc36f24c01, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1009,6 +1025,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ContainerCounter_Meat
       objectReference: {fileID: 0}
+    - target: {fileID: 2792149636813830318, guid: f6a5a13884d787342a470ddd58f3a11f, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
     - target: {fileID: 6482217648908625046, guid: f6a5a13884d787342a470ddd58f3a11f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.99
@@ -1049,6 +1069,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8327984953648530372, guid: f6a5a13884d787342a470ddd58f3a11f, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1118,6 +1142,10 @@ PrefabInstance:
       propertyPath: kitchenObjectSO
       value: 
       objectReference: {fileID: 11400000, guid: f23c201a2ced46445b8fc3794e9974d4, type: 2}
+    - target: {fileID: 2792149636813830318, guid: 4f2f0caff69bfb0488e62c90fed74d8e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
     - target: {fileID: 6482217648908625046, guid: 4f2f0caff69bfb0488e62c90fed74d8e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.5036695
@@ -1162,6 +1190,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 91e8fe3de9249fc44b7bdd8050062896, type: 3}
+    - target: {fileID: 8327984953648530372, guid: 4f2f0caff69bfb0488e62c90fed74d8e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1433,6 +1465,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ContainerCounter
       objectReference: {fileID: 0}
+    - target: {fileID: 2792149636813830318, guid: 4f2f0caff69bfb0488e62c90fed74d8e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
     - target: {fileID: 6482217648908625046, guid: 4f2f0caff69bfb0488e62c90fed74d8e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.45
@@ -1473,6 +1509,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8327984953648530372, guid: 4f2f0caff69bfb0488e62c90fed74d8e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1709,6 +1749,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: 'PlateCounter '
       objectReference: {fileID: 0}
+    - target: {fileID: 5250499648964810819, guid: 8ca8830a1e6ada44caa6c2c35f64e4c0, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
     - target: {fileID: 6482217648908625046, guid: 8ca8830a1e6ada44caa6c2c35f64e4c0, type: 3}
       propertyPath: m_LocalPosition.x
       value: -7.4310474

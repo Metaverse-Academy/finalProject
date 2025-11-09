@@ -117,7 +117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8aefe5ef7c9d48945a14757c040ee217, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProgressBarUI
-  cuttingCounter: {fileID: 0}
+  hasprogressBarGameObject: {fileID: 0}
   barImage: {fileID: 0}
 --- !u!114 &5715484976129302923
 MonoBehaviour:
