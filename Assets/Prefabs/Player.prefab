@@ -89,6 +89,37 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &1593241117895139070
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7245890982329118081}
+  m_Layer: 0
+  m_Name: HoldPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7245890982329118081
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1593241117895139070}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.64, y: 0.07, z: 1.32}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3446191231124172073}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2621353254846314746
 GameObject:
   m_ObjectHideFlags: 0
@@ -121,6 +152,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4550748784399702790}
+  - {fileID: 7245890982329118081}
   m_Father: {fileID: 319595024176533610}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6677738637523308270
@@ -207,8 +239,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4467123803812136339}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.786, z: 0.099}
+  m_LocalRotation: {x: -0.12333855, y: -0.1940974, z: -0.024606869, w: 0.9728866}
+  m_LocalPosition: {x: 0, y: 0.7860001, z: 0.09899998}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -285,7 +317,7 @@ MonoBehaviour:
   ReferenceFrame: 0
   RecenterTarget: 0
   PanAxis:
-    Value: 0
+    Value: -22.565506
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -295,7 +327,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   TiltAxis:
-    Value: 0
+    Value: -14.450357
     Center: 0
     Range: {x: -70, y: 70}
     Wrap: 0
@@ -339,7 +371,7 @@ MonoBehaviour:
         InputAction: {fileID: -8818210345356645471, guid: 20d7f63b1fa2f3948a553dc4c39d79a0, type: 3}
         Gain: -1
         CancelDeltaTime: 0
-      InputValue: 0
+      InputValue: -0
       Driver:
         AccelTime: 0.2
         DecelTime: 0.2
@@ -362,7 +394,7 @@ GameObject:
   - component: {fileID: 4157075426801416062}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -506,8 +538,8 @@ MonoBehaviour:
     m_ActionName: 'Player/Look[/Mouse/delta]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4157075426801416062}
-        m_TargetAssemblyTypeName: PlayerInteraction, Assembly-CSharp
+      - m_Target: {fileID: 5797396056753542765}
+        m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
         m_MethodName: OnInteract
         m_Mode: 0
         m_Arguments:
@@ -520,6 +552,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: c725e9b5-32ea-486f-97fe-121309bd4347
     m_ActionName: 'Player/Interact[/Keyboard/e]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5797396056753542765}
+        m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
+        m_MethodName: OnInteractAlternate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 62b4ab83-e825-4c49-845a-bd2d3c0f8faf
+    m_ActionName: 'Player/InteractAlternate[/Keyboard/f]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Player
@@ -577,6 +625,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   cameraTransform: {fileID: 7016592678769815784}
+  interactRange: 2
+  interactLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  holdPoint: {fileID: 7245890982329118081}
   walkSpeed: 5
   acceleration: 12
   sprintSpeed: 9
@@ -590,6 +643,9 @@ MonoBehaviour:
   crouchSpeed: 2.5
   standingHeight: 1
   crouchHeight: 0.25
+  playerInput: {fileID: 0}
+  clearCounterInteraction: {fileID: 0}
+  interactCooldown: 0.15
 --- !u!114 &4157075426801416062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -602,13 +658,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b29199b38568dcd48a4012deae98938c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
-  cameraTransform: {fileID: 7016592678769815784}
-  promptCanvas: {fileID: 0}
-  promptText: {fileID: 0}
-  interactDistance: 3
-  interactableLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  showDebugRay: 0
-  fadeDuration: 0.2
-  scalePop: 1.1
