@@ -44712,8 +44712,6 @@ MonoBehaviour:
       Input:
         InputAction: {fileID: -8818210345356645471, guid: 20d7f63b1fa2f3948a553dc4c39d79a0, type: 3}
         Gain: 1
-        LegacyInput: 
-        LegacyGain: 1
         CancelDeltaTime: 0
       InputValue: 0
       Driver:
@@ -44725,8 +44723,6 @@ MonoBehaviour:
       Input:
         InputAction: {fileID: -8818210345356645471, guid: 20d7f63b1fa2f3948a553dc4c39d79a0, type: 3}
         Gain: -1
-        LegacyInput: 
-        LegacyGain: 1
         CancelDeltaTime: 0
       InputValue: 0
       Driver:
