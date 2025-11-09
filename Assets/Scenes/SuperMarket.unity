@@ -829,7 +829,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -1812,7 +1813,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -1998,7 +2000,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -2288,7 +2291,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -2564,8 +2568,6 @@ MonoBehaviour:
     price: 10
     icon: {fileID: 0}
   destroyAfterCollect: 1
-  targetContainer: {fileID: 0}
-  targetLocalPosition: {x: -0.042, y: -0.887, z: -1.332}
 --- !u!65 &711786150
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2808,8 +2810,6 @@ MonoBehaviour:
     price: 10
     icon: {fileID: 0}
   destroyAfterCollect: 1
-  targetContainer: {fileID: 0}
-  targetLocalPosition: {x: -0.042, y: -0.887, z: -1.332}
 --- !u!1001 &789698012
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3148,8 +3148,6 @@ MonoBehaviour:
     price: 10
     icon: {fileID: 0}
   destroyAfterCollect: 1
-  targetContainer: {fileID: 0}
-  targetLocalPosition: {x: -0.042, y: -0.887, z: -1.332}
 --- !u!1001 &1018056862
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3293,7 +3291,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -4106,7 +4105,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -4367,7 +4367,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -4528,8 +4529,6 @@ MonoBehaviour:
     price: 10
     icon: {fileID: 0}
   destroyAfterCollect: 1
-  targetContainer: {fileID: 0}
-  targetLocalPosition: {x: -0.042, y: -0.887, z: -1.332}
 --- !u!4 &1796454321 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7b805bdf747f5466eb55c27579b69eee, type: 3}
@@ -4573,8 +4572,6 @@ MonoBehaviour:
     price: 10
     icon: {fileID: 0}
   destroyAfterCollect: 1
-  targetContainer: {fileID: 0}
-  targetLocalPosition: {x: -0.042, y: -0.887, z: -1.332}
 --- !u!4 &1826558241 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7b805bdf747f5466eb55c27579b69eee, type: 3}
@@ -4618,8 +4615,6 @@ MonoBehaviour:
     price: 10
     icon: {fileID: 0}
   destroyAfterCollect: 1
-  targetContainer: {fileID: 0}
-  targetLocalPosition: {x: -0.042, y: -0.887, z: -1.332}
 --- !u!1001 &1907639429
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4741,8 +4736,6 @@ MonoBehaviour:
     price: 10
     icon: {fileID: 0}
   destroyAfterCollect: 1
-  targetContainer: {fileID: 0}
-  targetLocalPosition: {x: -0.042, y: -0.887, z: -1.332}
 --- !u!1 &1951581663 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4499ed0d77d3e4823892c28442734e4f, type: 3}
@@ -4917,7 +4910,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -5092,8 +5086,6 @@ MonoBehaviour:
     price: 0
     icon: {fileID: 0}
   destroyAfterCollect: 1
-  targetContainer: {fileID: 0}
-  targetLocalPosition: {x: -0.042, y: -0.887, z: -1.332}
 --- !u!1 &2068874347
 GameObject:
   m_ObjectHideFlags: 0
@@ -5199,8 +5191,6 @@ MonoBehaviour:
     price: 10
     icon: {fileID: 0}
   destroyAfterCollect: 1
-  targetContainer: {fileID: 0}
-  targetLocalPosition: {x: -0.042, y: -0.887, z: -1.332}
 --- !u!1001 &2084433939
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -33079,16 +33069,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b29199b38568dcd48a4012deae98938c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
-  cameraTransform: {fileID: 7016592679721755439}
-  promptCanvas: {fileID: 0}
-  promptText: {fileID: 0}
-  interactDistance: 3
-  interactableLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  showDebugRay: 0
-  fadeDuration: 0.2
-  scalePop: 1.1
 --- !u!23 &4169877456883336298
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -44136,6 +44116,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   cameraTransform: {fileID: 7016592679721755439}
+  interactRange: 2
+  interactLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  holdPoint: {fileID: 0}
   walkSpeed: 5
   acceleration: 12
   sprintSpeed: 9
@@ -44149,6 +44134,9 @@ MonoBehaviour:
   crouchSpeed: 2.5
   standingHeight: 1
   crouchHeight: 0.25
+  playerInput: {fileID: 0}
+  clearCounterInteraction: {fileID: 0}
+  interactCooldown: 0.15
 --- !u!1 &5813186243431489924
 GameObject:
   m_ObjectHideFlags: 0

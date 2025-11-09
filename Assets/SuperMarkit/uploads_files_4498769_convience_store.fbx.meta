@@ -3,47 +3,7 @@ guid: e69ce28cd2098e645bd9a93dc866bd2e
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Tiles082_2K_Color
-    second: {fileID: 2800000, guid: f85f2a40ceda0440faa2fada0631e12a, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Tiles082_2K_Roughness
-    second: {fileID: 2800000, guid: 28067b57583a74b7987d25f962622706, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: chuttersnap-ktdmaxlkKtI-unsplash
-    second: {fileID: 2800000, guid: 36ed36e9cf1124c7b8f2acb8ef0b2961, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: franki-chamaki-wkvKZR4e2OI-unsplash
-    second: {fileID: 2800000, guid: 0fa7b79852fa64a00a6cc82e0519108d, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: phil-aicken-xATMkkPIL24-unsplash
-    second: {fileID: 2800000, guid: 080135d0a832c46f6a4628e475e79278, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: supermarket-g75415e3d2_1920
-    second: {fileID: 2800000, guid: 1f7cf6adedd4b4ff18af935ec5aae454, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: tiles_0024_color_2k
-    second: {fileID: 2800000, guid: 0bb4fd14758ad4e5a9103e4c59513e45, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: tiles_0024_roughness_2k
-    second: {fileID: 2800000, guid: e279f7680520247be8459956d69b2bf9, type: 3}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0

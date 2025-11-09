@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -11,14 +11,15 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
     [SerializeField] private float interactRange = 2f;
     private Vector3 lastIntaractinDir;
     [SerializeField] private LayerMask interactLayerMask;
-    private IInteractable SelectedCounter;
+    //private IInteractable SelectedCounter;
     public event EventHandler<SelectedCounterChangedEventArgs> OnSelectedCounterChanged;
     public class SelectedCounterChangedEventArgs : EventArgs
     {
         public IInteractable selectedCounter;
     }
     private KitchenObject kitchenObject;
-    [SerializeField] private Transform holdPoint;         // ���� ����
+    [SerializeField] private Transform holdPoint;         // نقطة اليد
+    private IInteractable selectedCounter;
 
 
 
@@ -77,6 +78,8 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
 
     private void HandelInteraction()
     {
+        Debug.Log("HandelInteraction called"); // ✅ أضف للتحقق
+
         if (moveInput != Vector2.zero)
         {
             lastIntaractinDir = transform.forward;
@@ -84,13 +87,20 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
 
         if (Physics.Raycast(transform.position, lastIntaractinDir, out RaycastHit raycastHit, interactRange, interactLayerMask))
         {
+            Debug.Log($"Hit: {raycastHit.transform.name}"); // ✅ أضف للتحقق
+
             if (raycastHit.transform.TryGetComponent(out IInteractable interactableCounter))
             {
-                // ����� ��� Selected Counter
-                if (SelectedCounter != interactableCounter)
+                Debug.Log($"Found interactable: {interactableCounter}"); // ✅ أضف للتحقق
+
+                // ✅ فعل هذا الكود
+                if (selectedCounter != interactableCounter)
                 {
                     SetSelectedCounter(interactableCounter);
                 }
+
+                // ✅ فعل هذا الكود - تنفيذ التفاعل مباشرة
+                interactableCounter.Interact(this);
             }
             else
             {
@@ -99,13 +109,8 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
         }
         else
         {
+            Debug.Log("No raycast hit"); // ✅ أضف للتحقق
             SetSelectedCounter(null);
-        }
-
-        // ����� ������� �� ��� Selected Counter
-        if (SelectedCounter != null)
-        {
-            SelectedCounter.Interact(this);
         }
     }
     private void HandelInteractAlternate()
@@ -120,11 +125,13 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
         {
             if (raycastHit.transform.TryGetComponent(out IInteractable interactableCounter))
             {
-                interactableCounter.InteractAlterante(this);
+                interactableCounter.InteractAlternate(this);
                 Debug.Log($"Interact Alternate with: {raycastHit.transform.name}");
             }
         }
     }
+
+
 
     private void HandleMovement()
     {
@@ -137,9 +144,9 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
         float targetSpeed = isCrouching ? crouchSpeed : (isSprinting ? sprintSpeed : walkSpeed);
         Vector3 targetVelH = planarMoveDir * targetSpeed;
 
-        float RotationSpeed = 10f;
-        Vector3 moveDir = new Vector3(targetVelH.x, 0f, targetVelH.z);
-        transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * RotationSpeed);
+        //float RotationSpeed = 10f;
+        //Vector3 moveDir = new Vector3(targetVelH.x, 0f, targetVelH.z);
+        //transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * RotationSpeed);
 
         Vector3 v = rb.linearVelocity;
         Vector3 vH = Vector3.Lerp(new Vector3(v.x, 0f, v.z), targetVelH, acceleration * Time.fixedDeltaTime);
@@ -221,10 +228,10 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
     public void OnInteract(InputAction.CallbackContext ctx)
     {
         if (!ctx.performed) return;
-        if (Time.time < nextInteractTime) return;   // ����� ����
+        if (Time.time < nextInteractTime) return;   // تبريد بسيط
         nextInteractTime = Time.time + interactCooldown;
 
-        HandelInteraction(); // ������� ���� ����
+        HandelInteraction(); // استدعاء واحد نظيف
     }
 
 
@@ -244,10 +251,11 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
 
     private void SetSelectedCounter(IInteractable selectedCounter)
     {
-        this.SelectedCounter = selectedCounter;
+        this.selectedCounter = selectedCounter; // ✅ فعل هذا السطر
+
         OnSelectedCounterChanged?.Invoke(this, new SelectedCounterChangedEventArgs
         {
-            selectedCounter = SelectedCounter
+            selectedCounter = this.selectedCounter // ✅ فعل هذا السطر
         });
     }
     private void OnDrawGizmosSelected()
