@@ -628,7 +628,7 @@ MonoBehaviour:
   interactRange: 2
   interactLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   holdPoint: {fileID: 7245890982329118081}
   walkSpeed: 5
   acceleration: 12
@@ -636,7 +636,7 @@ MonoBehaviour:
   jumpForce: 5
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   groundDistanceCheck: 0.3
   rayStartOffset: 0.06
   useToggleCrouch: 1
