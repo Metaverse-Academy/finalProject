@@ -1,11 +1,5 @@
-using UnityEngine;
-
-public class IInteractable : MonoBehaviour {
-
-    
-   public virtual void Interact(PlayerMovement player)
-    {
-        Debug.LogError("Interacted with " + gameObject.name);
-    }
-    
+public interface IInteractable
+{
+    void Interact(PlayerMovement player);
+    void InteractAlterante(PlayerMovement player);
 }

@@ -41,8 +41,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6482217648908625046}
-  - component: {fileID: 4880122036921143334}
   - component: {fileID: 8961239704027743803}
+  - component: {fileID: 7187696764459059803}
   m_Layer: 6
   m_Name: ClearCounter
   m_TagString: Untagged
@@ -67,23 +67,6 @@ Transform:
   - {fileID: 8824016188938027039}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4880122036921143334
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1607595633358134950}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4916d13f0a7eeeb41a8b581eb154e8eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ClearCounterInteraction
-  kitchenObjectSO: {fileID: 11400000, guid: f23c201a2ced46445b8fc3794e9974d4, type: 2}
-  CounterTopPoint: {fileID: 8824016188938027039}
-  secondClearCounter: {fileID: 0}
-  testing: 0
-  testAction: {fileID: 0}
 --- !u!65 &8961239704027743803
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -105,6 +88,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.5, y: 1.5, z: 1.27}
   m_Center: {x: 0, y: 0.49, z: 0}
+--- !u!114 &7187696764459059803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1607595633358134950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4916d13f0a7eeeb41a8b581eb154e8eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::clearCounterInteraction
+  counterTopPoint: {fileID: 8824016188938027039}
+  kitchenObjectSO: {fileID: 0}
 --- !u!1 &8609759484954708465
 GameObject:
   m_ObjectHideFlags: 0

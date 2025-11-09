@@ -174,6 +174,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: c725e9b5-32ea-486f-97fe-121309bd4347
     m_ActionName: 'Player/Interact[/Keyboard/e]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3482029907664478384}
+        m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
+        m_MethodName: OnInteractAlternate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: c81a4f90-02ec-4f6a-8ee9-ae17746a0288
+    m_ActionName: 'Player/InteractAlternate[/Keyboard/f]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Player
@@ -209,9 +225,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   cameraTransform: {fileID: 7313803211659929785}
   interactRange: 2
-  counterLayerMask:
+  interactLayerMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
+  holdPoint: {fileID: 0}
   walkSpeed: 5
   acceleration: 12
   sprintSpeed: 9
@@ -227,6 +244,7 @@ MonoBehaviour:
   crouchHeight: 0.25
   playerInput: {fileID: 0}
   clearCounterInteraction: {fileID: 0}
+  interactCooldown: 0.15
 --- !u!135 &4016355777686484668
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -258,8 +276,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7313803211659929785}
   - component: {fileID: 520991764062736123}
-  - component: {fileID: 6373528282087044515}
-  - component: {fileID: 1416217144120973220}
+  - component: {fileID: 744592211446458130}
+  - component: {fileID: 3246572234342184520}
   - component: {fileID: 8828744560151444408}
   m_Layer: 0
   m_Name: FPCamera
@@ -267,7 +285,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7313803211659929785
 Transform:
   m_ObjectHideFlags: 0
@@ -277,7 +295,7 @@ Transform:
   m_GameObject: {fileID: 3035212812494363249}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.78599995, z: 0.09899997}
+  m_LocalPosition: {x: 0, y: 0.6638462, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -326,7 +344,7 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
---- !u!114 &6373528282087044515
+--- !u!114 &744592211446458130
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -339,7 +357,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineHardLockToTarget
   Damping: 0
---- !u!114 &1416217144120973220
+--- !u!114 &3246572234342184520
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -348,31 +366,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3035212812494363249}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62d54399b04b4fa48a73e121d4937dd4, type: 3}
+  m_Script: {fileID: 11500000, guid: 1e8b78ac948f05a46a6d8339a503172b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachinePanTilt
-  ReferenceFrame: 0
-  RecenterTarget: 0
-  PanAxis:
-    Value: 0
-    Center: 0
-    Range: {x: -180, y: 180}
-    Wrap: 1
-    Recentering:
-      Enabled: 0
-      Wait: 1
-      Time: 2
-    Restrictions: 0
-  TiltAxis:
-    Value: 0
-    Center: 0
-    Range: {x: -70, y: 70}
-    Wrap: 0
-    Recentering:
-      Enabled: 0
-      Wait: 1
-      Time: 2
-    Restrictions: 0
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineHardLookAt
+  LookAtOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &8828744560151444408
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -389,29 +386,7 @@ MonoBehaviour:
   SuppressInputWhileBlending: 1
   IgnoreTimeScale: 0
   m_ControllerManager:
-    Controllers:
-    - Name: Look X (Pan)
-      Owner: {fileID: 1416217144120973220}
-      Enabled: 1
-      Input:
-        InputAction: {fileID: -8818210345356645471, guid: 20d7f63b1fa2f3948a553dc4c39d79a0, type: 3}
-        Gain: 1
-        CancelDeltaTime: 0
-      InputValue: 0
-      Driver:
-        AccelTime: 0.2
-        DecelTime: 0.2
-    - Name: Look Y (Tilt)
-      Owner: {fileID: 1416217144120973220}
-      Enabled: 1
-      Input:
-        InputAction: {fileID: -8818210345356645471, guid: 20d7f63b1fa2f3948a553dc4c39d79a0, type: 3}
-        Gain: -1
-        CancelDeltaTime: 0
-      InputValue: 0
-      Driver:
-        AccelTime: 0.2
-        DecelTime: 0.2
+    Controllers: []
   PlayerIndex: -1
   AutoEnableInputs: 1
 --- !u!1 &4036941474139068889
@@ -439,7 +414,7 @@ Transform:
   m_GameObject: {fileID: 4036941474139068889}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.34, y: 0.09130001, z: 0.44}
+  m_LocalPosition: {x: 0.42, y: 0.267, z: 0.619}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
