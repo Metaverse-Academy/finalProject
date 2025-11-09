@@ -569,7 +569,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 458551489}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.042138003, y: 0, z: 0, w: 0.99911183}
+  m_LocalRotation: {x: -0.0822335, y: -0.19288811, z: -0.032763887, w: 0.97721976}
   m_LocalPosition: {x: 0.08363, y: 2.2081532, z: 0.7623036}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1379,6 +1379,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6949511775169908635, guid: f35845eb9045a4345a7797b95cd4ae0d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2148,13 +2152,7 @@ PrefabInstance:
     - {fileID: 6618354730135065509, guid: 76dfdfd287cb81241a59234cf442f8cd, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3035212812494363249, guid: 76dfdfd287cb81241a59234cf442f8cd, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 9020355675822737774}
-    - targetCorrespondingSourceObject: {fileID: 3035212812494363249, guid: 76dfdfd287cb81241a59234cf442f8cd, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 9020355675822737773}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 76dfdfd287cb81241a59234cf442f8cd, type: 3}
 --- !u!1001 &6147438693763800478
 PrefabInstance:
@@ -2274,37 +2272,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6025f7c19b1e22f43b89c61cc9d8de69, type: 3}
---- !u!1 &9020355675822737766 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3035212812494363249, guid: 76dfdfd287cb81241a59234cf442f8cd, type: 3}
-  m_PrefabInstance: {fileID: 5461743745184147835}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &9020355675822737773
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9020355675822737766}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e8b78ac948f05a46a6d8339a503172b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineHardLookAt
-  LookAtOffset: {x: 0, y: 0, z: 0}
---- !u!114 &9020355675822737774
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9020355675822737766}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36d1163fa822e8b418a0a603ec078d5c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineHardLockToTarget
-  Damping: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
