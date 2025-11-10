@@ -1,73 +1,48 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerJointManger : MonoBehaviour
 {
-
-    [Header("Prefabs")]
-    [SerializeField] private GameObject player1Prefab;   // ááßíÈæÑÏ
-    [SerializeField] private GameObject player2Prefab;   // ááÌíãÈÇÏ
-
     [Header("Spawn Points (size = 2)")]
-    [SerializeField] private Transform[] spawnPoints;    // [0]=P1, [1]=P2
+    [SerializeField] private Transform spawnPoint;    // [0]=P1, [1]=P2
 
-    private PlayerInputManager pim;
-
-    private void Awake()
+    public void OnPlayerJoined(PlayerInput input)
     {
+        // int idx = input.playerIndex; // 0 ï¿½ï¿½ï¿½ï¿½ï¿½1ï¿½ 1 ï¿½ï¿½ï¿½ï¿½ï¿½2
 
-        pim = PlayerInputManager.instance ?? FindObjectOfType<PlayerInputManager>();
+        // // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // if (spawnPoints != null && idx < spawnPoints.Length && spawnPoints[idx] != null)
+        //     input.transform.SetPositionAndRotation(spawnPoints[idx].position, spawnPoints[idx].rotation);
+        // else
+        //     Debug.LogWarning("Spawn point missing or index out of range.");
 
-        //pim = PlayerInputManager.instance ?? FindFirstObjectByType<PlayerInputManager>();
-        if (pim == null)
-        {
-            Debug.LogError("PlayerInputManager ÛíÑ ãæÌæÏ Ýí ÇáãÔåÏ.");
-            enabled = false;
-            return;
-        }
+        // if (idx == 0)
+        // {
+        //     // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½2)
+        //     pim.playerPrefab = player2Prefab;
+
+        //     // (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½1
+        //     input.SwitchCurrentControlScheme("Keyboard&Mouse", Keyboard.current, Mouse.current);
+        // }
+        // else if (idx == 1)
+        // {
+        //     // (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½2
+        //     Gamepad pad = null;
+        //     foreach (var d in input.devices) if (d is Gamepad g) { pad = g; break; }
+        //     if (pad != null) input.SwitchCurrentControlScheme("Gamepad", pad);
+        //     else Debug.LogWarning("ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Gamepad ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.");
+        // }
+
+        StartCoroutine(SetPlayerPos(input.transform));
+
+
     }
 
-    private void OnEnable()
+    private IEnumerator SetPlayerPos(Transform transformPos)
     {
-        pim.onPlayerJoined += OnPlayerJoined;
-    }
-
-    private void OnDisable()
-    {
-        if (pim != null) pim.onPlayerJoined -= OnPlayerJoined;
-    }
-
-    private void Start()
-    {
-        // Ãæá áÇÚÈ ÏÇíãðÇ ãä ÈÑíÝÇÈ ÇááÇÚÈ1
-        pim.playerPrefab = player1Prefab;
-    }
-
-    private void OnPlayerJoined(PlayerInput input)
-    {
-        int idx = input.playerIndex; // 0 ááÇÚÈ1¡ 1 ááÇÚÈ2
-
-        // ÓÈÇæä ãÑÊÈ
-        if (spawnPoints != null && idx < spawnPoints.Length && spawnPoints[idx] != null)
-            input.transform.SetPositionAndRotation(spawnPoints[idx].position, spawnPoints[idx].rotation);
-        else
-            Debug.LogWarning("Spawn point missing or index out of range.");
-
-        if (idx == 0)
-        {
-            // ÍÖøÑ ÇáÈÑíÝÇÈ ááÇäÖãÇã ÇáÞÇÏã (áÇÚÈ2)
-            pim.playerPrefab = player2Prefab;
-
-            // (ÇÎÊíÇÑí) ËÈøÊ ÇáÓßíã Úáì ÇáßíÈæÑÏ ááÇÚÈ1
-            input.SwitchCurrentControlScheme("Keyboard&Mouse", Keyboard.current, Mouse.current);
-        }
-        else if (idx == 1)
-        {
-            // (ÇÎÊíÇÑí) ËÈøÊ ÇáÌíãÈÇÏ ÇáÐí ÇäÖãø Èå ÇááÇÚÈ2
-            Gamepad pad = null;
-            foreach (var d in input.devices) if (d is Gamepad g) { pad = g; break; }
-            if (pad != null) input.SwitchCurrentControlScheme("Gamepad", pad);
-            else Debug.LogWarning("áã íÊã ÇáÊÞÇØ Gamepad áåÐÇ ÇááÇÚÈ.");
-        }
+        yield return new WaitForSeconds(0.25f);
+        transformPos.position = spawnPoint.position;
+        Debug.Log($"Move Player TO {spawnPoint.position}");
     }
 }
