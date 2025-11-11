@@ -408,12 +408,12 @@ MonoBehaviour:
   moveSpeed: 5
   jumpForce: 5
   lookSensitivity: 2
-  interactRange: 2
+  crosshairDot: {fileID: 0}
+  interactRange: 4
   interactLayerMask:
     serializedVersion: 2
     m_Bits: 64
   holdPoint: {fileID: 2791160576230124170}
-  clearCounterInteraction: {fileID: 0}
   interactCooldown: 0.15
 --- !u!114 &2189468390868989117
 MonoBehaviour:

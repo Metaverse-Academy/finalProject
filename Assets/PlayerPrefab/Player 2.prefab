@@ -365,6 +365,7 @@ GameObject:
   - component: {fileID: 4461563026094912452}
   - component: {fileID: 2189468390868989117}
   - component: {fileID: 3990709075741255890}
+  - component: {fileID: 2974229689661782295}
   - component: {fileID: 2711156807929628171}
   - component: {fileID: 3241378681764260127}
   m_Layer: 6
@@ -557,6 +558,28 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0.43, z: 0}
+--- !u!114 &2974229689661782295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3281665562568399725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc5a024d155c8794fa4cef4b3791baf5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  moveSpeed: 5
+  jumpForce: 8
+  lookSensitivity: 2
+  crosshairDot: {fileID: 0}
+  interactRange: 4
+  interactLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  holdPoint: {fileID: 2791160576230124170}
+  interactCooldown: 0.15
 --- !u!114 &2711156807929628171
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -572,10 +595,6 @@ MonoBehaviour:
   moveSpeed: 5
   jumpForce: 8
   lookSensitivity: 2
-  interactRange: 2
-  interactLayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!143 &3241378681764260127
 CharacterController:
   m_ObjectHideFlags: 0
