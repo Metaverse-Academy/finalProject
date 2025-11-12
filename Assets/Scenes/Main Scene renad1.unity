@@ -45787,6 +45787,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 713156f028f04b0489acd9f5360eaf89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoundManger
+  audioClipRefsSO: {fileID: 11400000, guid: 98cad345126ee9b40a8fb6bf197f464d, type: 2}
 --- !u!1 &1014612870
 GameObject:
   m_ObjectHideFlags: 0

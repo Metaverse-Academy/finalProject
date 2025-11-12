@@ -22,6 +22,7 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
     private Vector3 lastIntaractinDir;
     [SerializeField] private LayerMask interactLayerMask;
 
+    public static event EventHandler OnPickupSomething;
     public event EventHandler<SelectedCounterChangedEventArgs> OnSelectedCounterChanged;
     public class SelectedCounterChangedEventArgs : EventArgs
     {
@@ -173,6 +174,8 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
     [SerializeField] private float interactCooldown = 0.15f;
     private float nextInteractTime = 0f;
 
+    public static object Instance { get; internal set; }
+
     public void OnInteract(InputAction.CallbackContext ctx)
     {
         if (!ctx.performed) return;
@@ -213,6 +216,11 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
     public void SetKitchenObject(KitchenObject kitchenObject)
     {
         this.kitchenObject = kitchenObject;
+
+        if (kitchenObject != null)
+        {
+            OnPickupSomething?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     public KitchenObject GetKitchenObject()
