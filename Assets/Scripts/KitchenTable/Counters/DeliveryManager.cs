@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class DeliveryManager : MonoBehaviour
 {
-    public event EventHandler OnRecipeSpawend;
+    public event EventHandler OnRecipeSpawned;
     public event EventHandler OnRecipeCompleted;
-
+    public event EventHandler OnRecipeSuccess;
+    public event EventHandler OnRecipeFailed;
 
     public static DeliveryManager Instance { get; private set; }
     [SerializeField] private RecipeListSO recipeListSO;
@@ -33,7 +34,7 @@ public class DeliveryManager : MonoBehaviour
             {
                 RecipeSO waitingRecipeSO = recipeListSO.recipeSOList[UnityEngine.Random.Range(0, recipeListSO.recipeSOList.Count)];
                 waitingRecipeSOList.Add(waitingRecipeSO);
-                OnRecipeSpawend?.Invoke(this, EventArgs.Empty);
+                OnRecipeSpawned?.Invoke(this, EventArgs.Empty);
             }
         }
     }
@@ -45,39 +46,52 @@ public class DeliveryManager : MonoBehaviour
             RecipeSO waitingRecipeSO = waitingRecipeSOList[i];
             if (waitingRecipeSO.kitchenObjectSOList.Count == plateKitchenObject.GetKitchenObjectSOList().Count)
             {
-                //has the same number of ingrediants
-                bool PlateContentMatchesRecipes = true;
+                // Has the same number of ingredients
+                bool plateContentMatchesRecipe = true;
                 foreach (KitchenObjectSO recipeKitchenObjectSO in waitingRecipeSO.kitchenObjectSOList)
                 {
-                    //contains this ingrediant
-                    bool ingredintFound = false;
+                    // Check if plate contains this ingredient
+                    bool ingredientFound = false;
                     foreach (KitchenObjectSO plateKitchenObjectSO in plateKitchenObject.GetKitchenObjectSOList())
-                    {//contains this ingrediant
+                    {
                         if (plateKitchenObjectSO == recipeKitchenObjectSO)
-                        {//found a match
-                            ingredintFound = true;
+                        {
+                            // Found a match
+                            ingredientFound = true;
                             break;
                         }
                     }
-                    if (!ingredintFound)
+                    if (!ingredientFound)
                     {
-                        //this ingrediant was not found in the plate
-                        PlateContentMatchesRecipes = false;
+                        // This ingredient was not found in the plate
+                        plateContentMatchesRecipe = false;
+                        break;
                     }
                 }
-                if (PlateContentMatchesRecipes)
+                if (plateContentMatchesRecipe)
                 {
-                    //player delivered the correct recipe
+                    // Player delivered the correct recipe
                     Debug.Log("Player delivered the correct recipe: " + waitingRecipeSO.recipeName);
                     waitingRecipeSOList.RemoveAt(i);
+
+                    // ·« ‰œ„— «·’Õ‰ Â‰« - Ì»ﬁÏ „⁄ «··«⁄»
+
+                    OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
                     OnRecipeCompleted?.Invoke(this, EventArgs.Empty);
                     return;
                 }
             }
-            //not the correct recipe
-            Debug.Log("Plate does not match any waiting recipe.");
         }
+
+        // No matching recipe found
+        Debug.Log("Plate does not match any waiting recipe.");
+
+        // ‰œ„— «·’Õ‰ ›ﬁÿ ≈–« ﬂ«‰  «·Ê’›… €Ì— ’ÕÌÕ…
+        plateKitchenObject.DestroySelf();
+
+        OnRecipeFailed?.Invoke(this, EventArgs.Empty);
     }
+
     public List<RecipeSO> GetWaitingRecipeSOList()
     {
         return waitingRecipeSOList;

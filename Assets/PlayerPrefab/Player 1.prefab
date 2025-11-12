@@ -277,7 +277,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1540038077537123021}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!114 &4636607574800065676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -593,7 +593,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   moveSpeed: 5
   jumpForce: 8
-  lookSensitivity: 5
+  lookSensitivity: 2
 --- !u!143 &7934940751580604156
 CharacterController:
   m_ObjectHideFlags: 0
