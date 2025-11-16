@@ -366,7 +366,6 @@ GameObject:
   - component: {fileID: 2189468390868989117}
   - component: {fileID: 3990709075741255890}
   - component: {fileID: 2974229689661782295}
-  - component: {fileID: 2711156807929628171}
   - component: {fileID: 3241378681764260127}
   m_Layer: 6
   m_Name: Player 2
@@ -384,7 +383,7 @@ Transform:
   m_GameObject: {fileID: 3281665562568399725}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.34559, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -579,21 +578,6 @@ MonoBehaviour:
     m_Bits: 64
   holdPoint: {fileID: 2791160576230124170}
   interactCooldown: 0.15
---- !u!114 &2711156807929628171
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3281665562568399725}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0dd2fce3072ce45f5a010e8f011f0d70, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  moveSpeed: 5
-  jumpForce: 8
-  lookSensitivity: 5
 --- !u!143 &3241378681764260127
 CharacterController:
   m_ObjectHideFlags: 0

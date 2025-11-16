@@ -16,11 +16,14 @@ public class PlayerController : MonoBehaviour
     private Camera playerCamera;
     private float rotationX = 0f;
     private float verticalVelocity = 0f;
+
+    private Animator anim;
     
     void Start()
     {
         characterController = GetComponent<CharacterController>();
         playerCamera = GetComponentInChildren<Camera>();
+        anim = GetComponentInChildren<Animator>();
         
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -53,6 +56,16 @@ public class PlayerController : MonoBehaviour
         rotationX -= m_lookAmt.y * lookSensitivity;
         rotationX = Mathf.Clamp(rotationX, -90f, 90f);
         playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0f, 0f);
+
+        if (m_moveAmt != Vector2.zero)
+        {
+            anim.SetBool("IsWalking", true);
+        }
+        else
+        {
+            anim.SetBool("IsWalking", false);
+            anim.SetTrigger("Idle");
+        }
     }
     
     public void OnMove(InputAction.CallbackContext value)
@@ -68,7 +81,10 @@ public class PlayerController : MonoBehaviour
     public void OnJump(InputAction.CallbackContext value)
     {
         if (value.performed)
+        {
             m_jumpPressed = true;
+            anim.SetTrigger("Jump");
+        }
         else
             m_jumpPressed = false;
     }
