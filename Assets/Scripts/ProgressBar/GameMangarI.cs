@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class GameMangarI : MonoBehaviour
 {
@@ -65,6 +66,23 @@ public class GameMangarI : MonoBehaviour
     {
         return state == State.GamePlaying;
     }
+
+    public bool IsCountdownToStartActive()
+    {
+        return state == State.CounrdownToStart;
+    }
+
+    public float GetCountdownToStartTimer()
+    {
+        return countDownToStartTimer;
+    }
+
+    public bool IsGameOver()
+    {
+        return state == State.GameOver;
+    }
 }
+
+
 
 
