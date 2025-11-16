@@ -11,7 +11,7 @@ public class DeliveryUI : MonoBehaviour
     }
     private void Start()
     {
-        DeliveryManager.Instance.OnRecipeSpawend += DeliveryManager_OnRecipeSpawend;
+        DeliveryManager.Instance.OnRecipeSpawned += DeliveryManager_OnRecipeSpawend;
         DeliveryManager.Instance.OnRecipeCompleted += DelvieryManager_OnRecipeCompleted;
         UpdateVisual();
     }
