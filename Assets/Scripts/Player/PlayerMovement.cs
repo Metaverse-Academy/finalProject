@@ -33,11 +33,13 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
     [SerializeField] private Transform holdPoint;
     private IInteractable selectedCounter;
     private Vector2 moveInput;
+    private Animator anim;
 
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
         playerCamera = GetComponentInChildren<Camera>();
+        anim = GetComponentInChildren<Animator>();
     }
 
     void Start()
@@ -82,6 +84,16 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
         {
             Debug.Log("Manual Interact Alternate Triggered with F Key");
             HandelInteractAlternate();
+        }
+
+        if (m_moveAmt != Vector2.zero)
+        {
+            anim.SetBool("IsWalking", true);
+        }
+        else
+        {
+            anim.SetBool("IsWalking", false);
+            anim.SetTrigger("Idle");
         }
     }
 
@@ -166,7 +178,10 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
     public void OnJump(InputAction.CallbackContext value)
     {
         if (value.performed)
+        {
             m_jumpPressed = true;
+            anim.SetTrigger("Jump");
+        }
         else
             m_jumpPressed = false;
     }
@@ -182,6 +197,8 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
         if (!ctx.performed) return;
         if (Time.time < nextInteractTime) return;
         nextInteractTime = Time.time + interactCooldown;
+
+        anim.SetTrigger("Interact");
 
         HandelInteraction();
     }
