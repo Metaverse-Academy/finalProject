@@ -178,6 +178,7 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
 
     public void OnInteract(InputAction.CallbackContext ctx)
     {
+        if (!GameMangarI.Instance.IsGamePlaying()) return;
         if (!ctx.performed) return;
         if (Time.time < nextInteractTime) return;
         nextInteractTime = Time.time + interactCooldown;
@@ -187,6 +188,8 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
 
     public void OnInteractAlternate(InputAction.CallbackContext ctx)
     {
+        if (!GameMangarI.Instance.IsGamePlaying()) return;
+
         Debug.Log("Interact Alternate Input Received: " + ctx.phase);
 
         if (ctx.performed)
