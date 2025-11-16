@@ -18,7 +18,7 @@ public class GameMangarI : MonoBehaviour
     private State state;
     private float waitingToStartTimer = 1f;
     private float countDownToStartTimer = 3f;
-    private float gamePlayingTimer = 2f;
+    private float gamePlayingTimer = 1000f;
 
     private void Awake()
     {
