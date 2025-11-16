@@ -197,6 +197,7 @@ GameObject:
   - component: {fileID: 3840591721748392090}
   - component: {fileID: 4636607574800065676}
   - component: {fileID: 7073576247110253138}
+  - component: {fileID: 7890608596989561041}
   m_Layer: 6
   m_Name: Camera
   m_TagString: Untagged
@@ -354,6 +355,23 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 0}
+--- !u!114 &7890608596989561041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1540038077537123021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69c789d5ee6284ebda1c8d74f66300fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PickupController
+  pickupRange: 3
+  holdPosition: {fileID: 2791160576230124170}
+  pickupKey: 101
+  dropKey: 113
+  playerCamera: {fileID: 6508150336720796458}
 --- !u!1 &3281665562568399725
 GameObject:
   m_ObjectHideFlags: 0
@@ -367,6 +385,7 @@ GameObject:
   - component: {fileID: 3990709075741255890}
   - component: {fileID: 2974229689661782295}
   - component: {fileID: 3241378681764260127}
+  - component: {fileID: -1114880133155195117}
   m_Layer: 6
   m_Name: Player 2
   m_TagString: Player
@@ -529,6 +548,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 62b4ab83-e825-4c49-845a-bd2d3c0f8faf
     m_ActionName: 'Player/InteractAlternate[/Keyboard/f]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 157ec52c-b2f9-45a8-a1e0-f87b7be571ff
+    m_ActionName: 'Player/skip[/Mouse/rightButton,/DualShock4GamepadHID/buttonSouth]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Player
@@ -603,6 +626,24 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-1114880133155195117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3281665562568399725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e4a3500a9d9e44e2a13976cd844be90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SupermarketPickupController
+  pickupRange: 3
+  holdPosition: {fileID: 4461563026094912452}
+  pickupKey: 101
+  dropKey: 113
+  playerCamera: {fileID: 6508150336720796458}
+  shoppingCart: {fileID: 6412017483407215562, guid: b71dca55d44a64d718845d5b5ef7074d, type: 3}
 --- !u!1 &5684961245571716453
 GameObject:
   m_ObjectHideFlags: 0
