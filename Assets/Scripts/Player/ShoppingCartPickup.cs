@@ -5,89 +5,89 @@ using UnityEngine.InputSystem;
 
 public class ShoppingCartPickup : MonoBehaviour
 {
-    [Header("pick Sitting ")]
-    public Transform holdPosition;
-    public float pickupDistance = 3f;
+    // [Header("pick Sitting ")]
+    // public Transform holdPosition;
+    // public float pickupDistance = 3f;
     
-    [Header("Cart State ")]
-    public ShoppingCart cart;
-    private bool holding = false;
+    // [Header("Cart State ")]
+    // public ShoppingCart cart;
+    // private bool holding = false;
     
-    [Header("Input Actions")]
-    public InputActionReference pickupAction;
+    // [Header("Input Actions")]
+    // public InputActionReference pickupAction;
     
-    private void OnEnable()
-    {
-        if (pickupAction != null)
-        {
-            pickupAction.action.Enable();
-            pickupAction.action.performed += OnPickupPerformed;
-        }
-    }
+    // private void OnEnable()
+    // {
+    //     if (pickupAction != null)
+    //     {
+    //         pickupAction.action.Enable();
+    //         pickupAction.action.performed += OnPickupPerformed;
+    //     }
+    // }
     
-    private void OnDisable()
-    {
-        if (pickupAction != null)
-        {
-            pickupAction.action.performed -= OnPickupPerformed;
-            pickupAction.action.Disable();
-        }
-    }
+    // private void OnDisable()
+    // {
+    //     if (pickupAction != null)
+    //     {
+    //         pickupAction.action.performed -= OnPickupPerformed;
+    //         pickupAction.action.Disable();
+    //     }
+    // }
     
-    private void OnPickupPerformed(InputAction.CallbackContext context)
-    {
-        if (!holding)
-            TryPickup();
-        else
-            Drop();
-    }
+    // private void OnPickupPerformed(InputAction.CallbackContext context)
+    // {
+    //     if (!holding)
+    //         TryPickup();
+    //     else
+    //         Drop();
+    // }
     
-    void TryPickup()
-    {
-        Collider[] items = Physics.OverlapSphere(transform.position, pickupDistance);
+    // void TryPickup()
+    // {
+    //     Collider[] items = Physics.OverlapSphere(transform.position, pickupDistance);
         
-        foreach (Collider item in items)
-        {
-            if (item.CompareTag("ShoppingCart"))
-            {
-                GameObject cartObj = item.gameObject;
-                cart = cartObj.GetComponent<ShoppingCart>();
+    //     foreach (Collider item in items)
+    //     {
+    //         if (item.CompareTag("ShoppingCart"))
+    //         {
+    //             GameObject cartObj = item.gameObject;
+    //             cart = cartObj.GetComponent<ShoppingCart>();
                 
-                if (cart != null)
-                {
-                    cartObj.transform.position = holdPosition.position;
-                    cartObj.transform.parent = holdPosition;
+    //             if (cart != null)
+    //             {
+    //                 cartObj.transform.position = holdPosition.position;
+    //                 cartObj.transform.parent = holdPosition;
                     
-                    Rigidbody rb = cartObj.GetComponent<Rigidbody>();
-                    if (rb != null)
-                        rb.isKinematic = true;
+    //                 Rigidbody rb = cartObj.GetComponent<Rigidbody>();
+    //                 if (rb != null)
+    //                     rb.isKinematic = true;
                     
-                    holding = true;
-                    Debug.Log(" Cart Picked ");
-                    break;
-                }
-            }
-        }
-    }
+    //                 holding = true;
+    //                 Debug.Log(" Cart Picked ");
+    //                 break;
+    //             }
+    //         }
+    //     }
+    // }
     
-    void Drop()
-    {
-        if (cart == null) return;
+    // void Drop()
+    // {
+    //     if (cart == null) return;
         
-        cart.transform.parent = null;
+    //     cart.transform.parent = null;
         
-        Rigidbody rb = cart.GetComponent<Rigidbody>();
-        if (rb != null)
-            rb.isKinematic = false;
+    //     Rigidbody rb = cart.GetComponent<Rigidbody>();
+    //     if (rb != null)
+    //         rb.isKinematic = false;
         
-        Debug.Log("Products : " + cart.cartItems.Count + " | Total: " + cart.totalPrice + " $");
+    //     Debug.Log("Products : " + cart.cartItems.Count + " | Total: " + cart.totalPrice + " $");
         
-        cart = null;
-        holding = false;
-    }
+    //     cart = null;
+    //     holding = false;
+    // }
     
-    public bool IsHoldingCart()
-    {
-        return holding && cart != null;
-    }
+    // public bool IsHoldingCart()
+    // {
+    //     return holding && cart != null;
+    // }
 }
