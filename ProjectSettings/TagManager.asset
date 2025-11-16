@@ -9,6 +9,7 @@ TagManager:
   - ContainerCounter
   - StoveCounter
   - TrashCounter
+  - ShoppingCart
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - Interact
   - Player1Camera
   - Player2Camera
-  - 
+  - Pickable
   - 
   - 
   - 
