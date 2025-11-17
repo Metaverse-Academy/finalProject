@@ -1,104 +1,131 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class MessageTrigger : MonoBehaviour
 {
     [Header("Message Settings")]
     [TextArea(3, 5)]
-    public string messageText = ""; // Message text
-
-    [Header("Player UI References")]
-    public PlayerUI[] playerUIs; // Array of UI references for each player
-
-    private bool hasTriggered = false; // To prevent multiple triggers
+    public string messageText = "مرحباً! هذه رسالة تجريبية"; // نص الرسالة
+    public float messageDuration = 15f; // مدة عرض الرسالة بالثواني
+    
+    [Header("UI References")]
+    public GameObject messagePanelRight; // Panel for Player1
+    public GameObject messagePanelLeft; // Panel for Player2
+    public Text messageTextUIRight; // Text for Player1 panel
+    public Text messageTextUILeft; // Text for Player2 panel
+    public Button skipButtonRight; // زر التخطي للـ Player1
+    public Button skipButtonLeft; // زر التخطي للـ Player2
+    
+    private bool hasTriggered = false; // عشان ما تتكرر الرسالة
+    private Coroutine hideCoroutine;
+    private GameObject activePanel; // Track which panel is currently active
 
     private void Start()
     {
-        // Hide all panels at start
-        foreach (var ui in playerUIs)
+        // تأكد إن الـ Panels مخفية في البداية
+        if (messagePanelRight != null)
         {
-            if (ui.messagePanel != null)
-            {
-                ui.messagePanel.SetActive(false);
-                Debug.Log($"🟢 Message panel hidden for player UI: {ui.playerTag}");
-            }
-            else
-            {
-                Debug.LogError($"❌ Message panel missing for player UI: {ui.playerTag}");
-            }
-
-            if (ui.skipButton != null)
-            {
-                // Capture variable for correct reference in loop
-                var capturedUI = ui;
-                ui.skipButton.onClick.AddListener(() => SkipMessage(capturedUI));
-                Debug.Log($"🔗 Skip button linked for player UI: {ui.playerTag}");
-            }
-            else
-            {
-                Debug.LogError($"❌ Skip button missing for player UI: {ui.playerTag}");
-            }
+            messagePanelRight.SetActive(false);
+        }
+        
+        if (messagePanelLeft != null)
+        {
+            messagePanelLeft.SetActive(false);
         }
 
-      
+        // Setup skip button listeners
+        if (skipButtonRight != null)
+        {
+            skipButtonRight.onClick.AddListener(() => HideMessage(messagePanelRight));
+        }
+        
+        if (skipButtonLeft != null)
+        {
+            skipButtonLeft.onClick.AddListener(() => HideMessage(messagePanelLeft));
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!hasTriggered && other.CompareTag("Player"))
-        {
-            Debug.Log($"🚶‍♂️ Player '{other.name}' entered trigger.");
-            ShowMessageForPlayer(other.tag);
-             Cursor.lockState = CursorLockMode.None;
-             Cursor.visible = true;
-            hasTriggered = true;
-        }
-    }
+        if (hasTriggered) return;
 
-    void ShowMessageForPlayer(string playerTag)
-    {
-        foreach (var ui in playerUIs)
+        if (other.CompareTag("Player"))
         {
-            if (ui.playerTag == playerTag)
+            // Try to get PlayerID component
+            PlayerID playerID = other.GetComponent<PlayerID>();
+            
+            if (playerID != null)
             {
-                if (ui.messagePanel == null || ui.messageText == null)
+                if (playerID.playerNumber == 1)
                 {
-                    Debug.LogError($"❌ Missing UI references for player tag: {playerTag}");
-                    return;
+                    ShowMessage(messagePanelRight, messageTextUIRight, "Player1");
+                    hasTriggered = true;
                 }
-
-                Debug.Log($"📢 Showing message to player '{playerTag}': \"{messageText}\"");
-
-                ui.messageText.text = messageText;
-                ui.messagePanel.SetActive(true);
-                return;
+                else if (playerID.playerNumber == 2)
+                {
+                    ShowMessage(messagePanelLeft, messageTextUILeft, "Player2");
+                    hasTriggered = true;
+                }
+                else
+                {
+                    Debug.LogWarning("⚠️ PlayerID component found but playerNumber is not 1 or 2. Value: " + playerID.playerNumber);
+                }
+            }
+            else
+            {
+                Debug.LogError("⚠️ Player detected but no PlayerID component found!");
             }
         }
-
-        Debug.LogWarning($"⚠️ No UI found for player tag: {playerTag}");
     }
 
-    void SkipMessage(PlayerUI ui)
+    void ShowMessage(GameObject panel, Text textUI, string playerName)
     {
-        if (ui.messagePanel != null && ui.messagePanel.activeSelf)
+        if (panel == null || textUI == null)
         {
-            ui.messagePanel.SetActive(false);
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-            Debug.Log($"⏭️ Player '{ui.playerTag}' skipped the message.");
+            Debug.LogError("⚠️ Panel or Text reference is missing!");
+            return;
         }
-        else
-        {
-            Debug.Log($"⚠️ No active message to skip for player '{ui.playerTag}'.");
-        }
-    }
-}
 
-[System.Serializable]
-public class PlayerUI
-{
-    public string playerTag;         // Example: "Player1", "Player2"
-    public GameObject messagePanel;  // The player's message panel
-    public Text messageText;         // The text component
-    public Button skipButton;        // The skip button
+        Debug.Log($"📢 Showing message for {playerName}: {messageText}");
+
+        // Display the message
+        textUI.text = messageText;
+        panel.SetActive(true);
+        activePanel = panel;
+
+        // Stop any existing hide coroutine
+        if (hideCoroutine != null)
+        {
+            StopCoroutine(hideCoroutine);
+        }
+
+        // Hide the message after the specified duration
+        hideCoroutine = StartCoroutine(HideMessageAfterDelay(panel));
+    }
+
+    IEnumerator HideMessageAfterDelay(GameObject panel)
+    {
+        yield return new WaitForSeconds(messageDuration);
+        Debug.Log("🔙 Hiding message");
+        HideMessage(panel);
+    }
+
+    void HideMessage(GameObject panel)
+    {
+        if (panel != null)
+        {
+            panel.SetActive(false);
+        }
+
+        // Stop the hide coroutine if it's running
+        if (hideCoroutine != null)
+        {
+            StopCoroutine(hideCoroutine);
+            hideCoroutine = null;
+        }
+
+        // Uncomment the line below if you want the trigger to work again
+        // hasTriggered = false;
+    }
 }

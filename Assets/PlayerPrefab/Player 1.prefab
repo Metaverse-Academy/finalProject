@@ -387,6 +387,7 @@ GameObject:
   - component: {fileID: 3990709075741255890}
   - component: {fileID: 7934940751580604156}
   - component: {fileID: 2101617694669319986}
+  - component: {fileID: -3920529974287832110}
   m_Layer: 6
   m_Name: Player 1
   m_TagString: Player
@@ -645,6 +646,19 @@ MonoBehaviour:
   dropKey: 113
   playerCamera: {fileID: 6508150336720796458}
   shoppingCart: {fileID: 6412017483407215562, guid: b71dca55d44a64d718845d5b5ef7074d, type: 3}
+--- !u!114 &-3920529974287832110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3281665562568399725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 080e3b047a80b40918cf854e37ddcca1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerID
+  playerNumber: 1
 --- !u!1 &5684961245571716453
 GameObject:
   m_ObjectHideFlags: 0
