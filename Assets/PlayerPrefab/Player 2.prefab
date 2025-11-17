@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5710792635658441286}
   - component: {fileID: 8831594175157003154}
   - component: {fileID: 841108402649590869}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: FPCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -198,7 +198,7 @@ GameObject:
   - component: {fileID: 4636607574800065676}
   - component: {fileID: 7073576247110253138}
   - component: {fileID: 7890608596989561041}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -386,8 +386,7 @@ GameObject:
   - component: {fileID: 2974229689661782295}
   - component: {fileID: 3241378681764260127}
   - component: {fileID: -1114880133155195117}
-  - component: {fileID: -1774604834480478336}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Player 2
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -645,19 +644,6 @@ MonoBehaviour:
   dropKey: 113
   playerCamera: {fileID: 6508150336720796458}
   shoppingCart: {fileID: 6412017483407215562, guid: b71dca55d44a64d718845d5b5ef7074d, type: 3}
---- !u!114 &-1774604834480478336
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3281665562568399725}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 080e3b047a80b40918cf854e37ddcca1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerID
-  playerNumber: 2
 --- !u!1 &5684961245571716453
 GameObject:
   m_ObjectHideFlags: 0
@@ -669,7 +655,7 @@ GameObject:
   - component: {fileID: 7794947365411680914}
   - component: {fileID: 3524152979627045939}
   - component: {fileID: 1288001359528863906}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -758,7 +744,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2791160576230124170}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: HoldPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -791,7 +777,7 @@ GameObject:
   - component: {fileID: 8614263343620329909}
   - component: {fileID: 5683704064368189260}
   - component: {fileID: 3607774468087675149}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
