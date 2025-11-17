@@ -1,16 +1,16 @@
 using System;
 using UnityEngine;
-using UnityEngine.Pool;
 
 public class GameMangarI : MonoBehaviour
 {
     public static GameMangarI Instance { get; private set; }
 
     public event EventHandler OnStateChanged;
+
     private enum State
     {
-        WaitingToStsrt,
-        CounrdownToStart,
+        WaitingToStart,
+        CountdownToStart,
         GamePlaying,
         GameOver,
     }
@@ -22,28 +22,44 @@ public class GameMangarI : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance != null)
+        {
+            Debug.LogError("There is more than one GameMangarI instance!");
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
-        state = State.WaitingToStsrt;
+        state = State.WaitingToStart;
+        Debug.Log("GameMangarI initialized with state: " + state);
+    }
+
+    private void Start()
+    {
+        // Ensure we start in the correct state
+        OnStateChanged?.Invoke(this, EventArgs.Empty);
     }
 
     private void Update()
     {
         switch (state)
         {
-            case State.WaitingToStsrt:
+            case State.WaitingToStart:
                 waitingToStartTimer -= Time.deltaTime;
                 if (waitingToStartTimer <= 0f)
                 {
-                    state = State.CounrdownToStart;
+                    state = State.CountdownToStart;
                     OnStateChanged?.Invoke(this, EventArgs.Empty);
+                    Debug.Log("Game state changed to: " + state);
                 }
                 break;
-            case State.CounrdownToStart:
+            case State.CountdownToStart:
                 countDownToStartTimer -= Time.deltaTime;
                 if (countDownToStartTimer <= 0f)
                 {
-                    state = State.GamePlaying; // Transition to GamePlaying for demonstration
+                    state = State.GamePlaying;
                     OnStateChanged?.Invoke(this, EventArgs.Empty);
+                    Debug.Log("Game state changed to: " + state);
                 }
                 break;
             case State.GamePlaying:
@@ -52,16 +68,14 @@ public class GameMangarI : MonoBehaviour
                 {
                     state = State.GameOver;
                     OnStateChanged?.Invoke(this, EventArgs.Empty);
+                    Debug.Log("Game state changed to: " + state);
                 }
                 break;
             case State.GameOver:
                 // Implement game over logic here
                 break;
         }
-        Debug.Log(state);
     }
-
-
 
     public bool IsGamePlaying()
     {
@@ -70,7 +84,7 @@ public class GameMangarI : MonoBehaviour
 
     public bool IsCountdownToStartActive()
     {
-        return state == State.CounrdownToStart;
+        return state == State.CountdownToStart;
     }
 
     public float GetCountdownToStartTimer()
@@ -82,8 +96,10 @@ public class GameMangarI : MonoBehaviour
     {
         return state == State.GameOver;
     }
+
+    // Helper method to check if player can interact
+    public bool CanPlayerInteract()
+    {
+        return state == State.GamePlaying || state == State.CountdownToStart;
+    }
 }
-
-
-
-

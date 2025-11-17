@@ -20,7 +20,7 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
 
     [SerializeField] private float interactRange = 4f;
     private Vector3 lastIntaractinDir;
-    [SerializeField] private LayerMask interactLayerMask;
+    [SerializeField] private LayerMask interactLayerMask = -1;
 
     public static event EventHandler OnPickupSomething;
     public event EventHandler<SelectedCounterChangedEventArgs> OnSelectedCounterChanged;
@@ -40,6 +40,9 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
         characterController = GetComponent<CharacterController>();
         playerCamera = GetComponentInChildren<Camera>();
         anim = GetComponentInChildren<Animator>();
+
+        // Debug all components
+        Debug.Log($"PlayerMovement Awake - CharacterController: {characterController != null}, Camera: {playerCamera != null}, Animator: {anim != null}");
     }
 
     void Start()
@@ -74,44 +77,79 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
         transform.Rotate(Vector3.up * m_lookAmt.x * lookSensitivity);
         rotationX -= m_lookAmt.y * lookSensitivity;
         rotationX = Mathf.Clamp(rotationX, -90f, 90f);
-        playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0f, 0f);
+        if (playerCamera != null)
+            playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0f, 0f);
 
+        // Continuous interaction detection
+        HandleContinuousInteractionDetection();
+
+        // Manual interaction with F key
+        if (Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame)
+        {
+            if (GameMangarI.Instance != null && GameMangarI.Instance.CanPlayerInteract())
+            {
+                Debug.Log("Manual Interact Alternate Triggered with F Key");
+                HandelInteractAlternate();
+            }
+        }
+
+        // Animation handling
+        if (anim != null)
+        {
+            if (m_moveAmt != Vector2.zero)
+            {
+                anim.SetBool("IsWalking", true);
+            }
+            else
+            {
+                anim.SetBool("IsWalking", false);
+            }
+        }
+    }
+
+    private void HandleContinuousInteractionDetection()
+    {
         Ray centerRay = GetCenterRay();
         Debug.DrawRay(centerRay.origin, centerRay.direction * interactRange, Color.green);
 
-        // اختيار يدوي بالضغط على F
-        if (Keyboard.current.fKey.wasPressedThisFrame)
+        if (Physics.Raycast(centerRay, out RaycastHit hit, interactRange, interactLayerMask, QueryTriggerInteraction.Collide))
         {
-            Debug.Log("Manual Interact Alternate Triggered with F Key");
-            HandelInteractAlternate();
-        }
-
-        if (m_moveAmt != Vector2.zero)
-        {
-            anim.SetBool("IsWalking", true);
+            if (hit.transform.TryGetComponent(out IInteractable interactable))
+            {
+                SetSelectedCounter(interactable);
+            }
+            else
+            {
+                SetSelectedCounter(null);
+            }
         }
         else
         {
-            anim.SetBool("IsWalking", false);
-            anim.SetTrigger("Idle");
+            SetSelectedCounter(null);
         }
     }
 
     private void HandelInteraction()
     {
+        if (GameMangarI.Instance == null || !GameMangarI.Instance.CanPlayerInteract())
+        {
+            Debug.Log("Interaction blocked by game state");
+            return;
+        }
+
         Debug.Log("HandelInteraction called");
 
         Ray centerRay = GetCenterRay();
         Vector3 startPoint = centerRay.origin;
         Vector3 direction = centerRay.direction;
 
-        if (Physics.Raycast(startPoint, direction, out RaycastHit hit, interactRange, interactLayerMask, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(startPoint, direction, out RaycastHit hit, interactRange, interactLayerMask, QueryTriggerInteraction.Collide))
         {
             HandleHit(hit);
             return;
         }
 
-        Debug.Log("No interactables found with any method");
+        Debug.Log("No interactables found");
         SetSelectedCounter(null);
     }
 
@@ -134,6 +172,12 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
 
     private void HandelInteractAlternate()
     {
+        if (GameMangarI.Instance == null || !GameMangarI.Instance.CanPlayerInteract())
+        {
+            Debug.Log("Alternate interaction blocked by game state");
+            return;
+        }
+
         Debug.Log("HandelInteractAlternate called");
 
         Ray centerRay = GetCenterRay();
@@ -141,11 +185,10 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
         Vector3 direction = centerRay.direction;
 
         Debug.DrawRay(startPoint, direction * interactRange, Color.yellow, 2f);
-        Debug.Log("Interact Alternate raycast from center: " + startPoint + ", dir: " + direction);
 
-        if (Physics.Raycast(startPoint, direction, out RaycastHit raycastHit, interactRange, interactLayerMask, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(startPoint, direction, out RaycastHit raycastHit, interactRange, interactLayerMask, QueryTriggerInteraction.Collide))
         {
-            Debug.Log("Interact Alternate Hit: " + raycastHit.transform.name + " at distance: " + raycastHit.distance);
+            Debug.Log("Interact Alternate Hit: " + raycastHit.transform.name);
 
             if (raycastHit.transform.TryGetComponent(out IInteractable interactableCounter))
             {
@@ -154,7 +197,7 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
             }
             else
             {
-                Debug.Log("Hit object " + raycastHit.transform.name + " but no IInteractable component for alternate");
+                Debug.Log("Hit object " + raycastHit.transform.name + " but no IInteractable component");
             }
         }
         else
@@ -180,7 +223,8 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
         if (value.performed)
         {
             m_jumpPressed = true;
-            anim.SetTrigger("Jump");
+            if (anim != null)
+                anim.SetTrigger("Jump");
         }
         else
             m_jumpPressed = false;
@@ -189,34 +233,57 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
     [SerializeField] private float interactCooldown = 0.15f;
     private float nextInteractTime = 0f;
 
-    public static object Instance { get; internal set; }
-
     public void OnInteract(InputAction.CallbackContext ctx)
     {
-        if (!GameMangarI.Instance.IsGamePlaying()) return;
         if (!ctx.performed) return;
         if (Time.time < nextInteractTime) return;
+
+        // Check for null references first
+        if (GameMangarI.Instance == null)
+        {
+            Debug.LogError("GameMangarI.Instance is null!");
+            return;
+        }
+
+        if (!GameMangarI.Instance.CanPlayerInteract())
+        {
+            Debug.Log("Interact blocked - game not in play state");
+            return;
+        }
+
+        if (anim == null)
+        {
+            Debug.LogError("Animator is null! Cannot play interact animation");
+            // Continue without animation rather than crashing
+        }
+        else
+        {
+            anim.SetTrigger("Interact");
+        }
+
         nextInteractTime = Time.time + interactCooldown;
-
-        anim.SetTrigger("Interact");
-
         HandelInteraction();
     }
 
     public void OnInteractAlternate(InputAction.CallbackContext ctx)
     {
-        if (!GameMangarI.Instance.IsGamePlaying()) return;
+        if (!ctx.performed) return;
+        if (Time.time < nextInteractTime) return;
 
-        Debug.Log("Interact Alternate Input Received: " + ctx.phase);
-
-        if (ctx.performed)
+        if (GameMangarI.Instance == null)
         {
-            if (Time.time < nextInteractTime) return;
-            nextInteractTime = Time.time + interactCooldown;
-
-            Debug.Log("Handling Interact Alternate");
-            HandelInteractAlternate();
+            Debug.LogError("GameMangarI.Instance is null!");
+            return;
         }
+
+        if (!GameMangarI.Instance.CanPlayerInteract())
+        {
+            Debug.Log("Interact Alternate blocked - game not in play state");
+            return;
+        }
+
+        nextInteractTime = Time.time + interactCooldown;
+        HandelInteractAlternate();
     }
 
     #endregion
@@ -266,29 +333,35 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
 
     private Ray GetCenterRay()
     {
+        if (playerCamera == null)
+        {
+            Debug.LogError("Player camera is null!");
+            return new Ray(transform.position + Vector3.up, transform.forward);
+        }
         return playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
     }
 
-    private void DebugDrawSphere(Vector3 center, float radius, Color color, float duration = 0.05f)
+    // Emergency fix for missing animator
+    private void FindAnimator()
     {
-        int segments = 16;
-        float step = 2f * Mathf.PI / segments;
-
-        for (int axis = 0; axis < 3; axis++)
+        if (anim == null)
         {
-            Vector3 prev = Vector3.zero;
-            for (int i = 0; i <= segments; i++)
+            anim = GetComponentInChildren<Animator>();
+            if (anim == null)
             {
-                float a = i * step;
-                Vector3 p = axis == 0
-                    ? center + new Vector3(Mathf.Cos(a) * radius, Mathf.Sin(a) * radius, 0f)
-                    : axis == 1
-                        ? center + new Vector3(Mathf.Cos(a) * radius, 0f, Mathf.Sin(a) * radius)
-                        : center + new Vector3(0f, Mathf.Cos(a) * radius, Mathf.Sin(a) * radius);
-
-                if (i > 0) Debug.DrawLine(prev, p, color, duration);
-                prev = p;
+                Debug.LogError("No Animator found in PlayerMovement! Please add an Animator component.");
+            }
+            else
+            {
+                Debug.Log("Animator found and assigned: " + anim.name);
             }
         }
+    }
+
+    // Call this if you need to manually fix the animator
+    [ContextMenu("Find Missing Animator")]
+    public void FindMissingAnimator()
+    {
+        FindAnimator();
     }
 }
