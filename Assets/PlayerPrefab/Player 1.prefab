@@ -197,6 +197,7 @@ GameObject:
   - component: {fileID: 3840591721748392090}
   - component: {fileID: 4636607574800065676}
   - component: {fileID: 7073576247110253138}
+  - component: {fileID: 497959967228386167}
   m_Layer: 6
   m_Name: Camera
   m_TagString: Untagged
@@ -213,7 +214,7 @@ Transform:
   m_GameObject: {fileID: 1540038077537123021}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.02, y: 0.98, z: 0.07}
+  m_LocalPosition: {x: -0.02, y: 0.98, z: 0.06999999}
   m_LocalScale: {x: 1.612059, y: 1.2577868, z: 1.5611819}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -252,7 +253,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 34
+  field of view: 60
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -354,6 +355,24 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 0}
+--- !u!114 &497959967228386167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1540038077537123021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e4a3500a9d9e44e2a13976cd844be90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SupermarketPickupController
+  pickupRange: 3
+  holdPosition: {fileID: 2791160576230124170}
+  pickupKey: 101
+  dropKey: 113
+  playerCamera: {fileID: 6508150336720796458}
+  shoppingCart: {fileID: 0}
 --- !u!1 &3281665562568399725
 GameObject:
   m_ObjectHideFlags: 0
@@ -366,8 +385,8 @@ GameObject:
   - component: {fileID: 4877504510394132533}
   - component: {fileID: 2189468390868989117}
   - component: {fileID: 3990709075741255890}
-  - component: {fileID: -3834210278762192382}
   - component: {fileID: 7934940751580604156}
+  - component: {fileID: 2101617694669319986}
   m_Layer: 6
   m_Name: Player 1
   m_TagString: Player
@@ -389,8 +408,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7794947365411680914}
-  - {fileID: 2259094180886401643}
   - {fileID: 1860686372707457755}
+  - {fileID: 2259094180886401643}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4877504510394132533
@@ -405,7 +424,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc5a024d155c8794fa4cef4b3791baf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  moveSpeed: 5
+  moveSpeed: 15
   jumpForce: 5
   lookSensitivity: 0.5
   interactRange: 4
@@ -426,7 +445,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
-  m_Actions: {fileID: 0}
+  m_Actions: {fileID: -944628639613478452, guid: 20d7f63b1fa2f3948a553dc4c39d79a0, type: 3}
   m_NotificationBehavior: 2
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
@@ -551,8 +570,12 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 62b4ab83-e825-4c49-845a-bd2d3c0f8faf
     m_ActionName: 'Player/InteractAlternate[/Keyboard/f]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 157ec52c-b2f9-45a8-a1e0-f87b7be571ff
+    m_ActionName: 'Player/skip[/Mouse/rightButton,/DualShock4GamepadHID/buttonSouth]'
   m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: Keyboard&Mouse
+  m_DefaultControlScheme: 
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 6508150336720796458}
@@ -579,21 +602,6 @@ CapsuleCollider:
   m_Height: 2.1013167
   m_Direction: 1
   m_Center: {x: -0.013100594, y: -0.06620419, z: 0}
---- !u!114 &-3834210278762192382
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3281665562568399725}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0dd2fce3072ce45f5a010e8f011f0d70, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  moveSpeed: 5
-  jumpForce: 8
-  lookSensitivity: 2
 --- !u!143 &7934940751580604156
 CharacterController:
   m_ObjectHideFlags: 0
@@ -619,6 +627,24 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2101617694669319986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3281665562568399725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e4a3500a9d9e44e2a13976cd844be90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SupermarketPickupController
+  pickupRange: 3
+  holdPosition: {fileID: 4461563026094912452}
+  pickupKey: 101
+  dropKey: 113
+  playerCamera: {fileID: 6508150336720796458}
+  shoppingCart: {fileID: 6412017483407215562, guid: b71dca55d44a64d718845d5b5ef7074d, type: 3}
 --- !u!1 &5684961245571716453
 GameObject:
   m_ObjectHideFlags: 0
@@ -758,7 +784,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8614263343620329909
 Transform:
   m_ObjectHideFlags: 0

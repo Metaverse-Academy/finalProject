@@ -1,36 +1,67 @@
-using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class SceneTrigger : MonoBehaviour
+using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
+
+public class MessageTrigger : MonoBehaviour
 {
-    [Header("إعدادات Scene")]
-    public string sceneName = "NewScene"; // اسم الـ Scene الجديد
-    public float sceneDuration = 15f; // المدة بالثواني
-    
-    private string previousScene;
-    
-    private void OnTriggerEnter(Collider other)
+    [Header("Message Settings")]
+    [TextArea(3, 5)]
+    public string messageText = "مرحباً! هذه رسالة تجريبية"; // نص الرسالة
+    public float messageDuration = 15f; // مدة عرض الرسالة بالثواني
+
+    [Header("UI References")]
+    public GameObject messagePanel; // الـ Panel اللي فيه الرسالة
+    public Text messageTextUI; // الـ Text component (استخدم TMP إذا تستخدم TextMeshPro)
+    public Button skipButton; // زر التخطي
+
+    private bool hasTriggered = false; // عشان ما تتكرر الرسالة
+    private Coroutine hideCoroutine;
+
+    private void Start()
     {
-        if (other.CompareTag("Player"))
+        // تأكد إن الـ Panel مخفي في البداية
+        if (messagePanel != null)
         {
-            OpenNewScene();
+            messagePanel.SetActive(false);
         }
     }
-    
-    void OpenNewScene()
+
+    private void OnTriggerEnter(Collider other)
     {
-        previousScene = SceneManager.GetActiveScene().name;
-        
-        Debug.Log("🚪 فتح Scene: " + sceneName);
-        SceneManager.LoadScene(sceneName);
-        
-        // ارجع بعد 15 ثانية
-        Invoke("ReturnToPreviousScene", sceneDuration);
+        if (other.CompareTag("Player") && !hasTriggered)
+        {
+            ShowMessage();
+            hasTriggered = true;
+        }
     }
-    
-    void ReturnToPreviousScene()
+
+    void ShowMessage()
     {
-        Debug.Log("🔙 العودة إلى: " + previousScene);
-        SceneManager.LoadScene(previousScene);
+        if (messagePanel == null || messageTextUI == null)
+        {
+            Debug.LogError("⚠️ المرجع للـ Panel أو Text مفقود!");
+            return;
+        }
+
+        Debug.Log("📢 عرض الرسالة: " + messageText);
+
+        // اعرض الرسالة
+        messageTextUI.text = messageText;
+        messagePanel.SetActive(true);
+
+        // اخفِ الرسالة بعد المدة المحددة
+        StartCoroutine(HideMessageAfterDelay());
+    }
+
+    IEnumerator HideMessageAfterDelay()
+    {
+        yield return new WaitForSeconds(messageDuration);
+
+        Debug.Log("🔙 إخفاء الرسالة");
+        messagePanel.SetActive(false);
+
+        // إذا تبي الـ Trigger يشتغل مرة ثانية، غيّر هذا
+        // hasTriggered = false;
     }
 }
