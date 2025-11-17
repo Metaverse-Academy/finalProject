@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5710792635658441286}
   - component: {fileID: 8831594175157003154}
   - component: {fileID: 648414198698254451}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: FPCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -198,7 +198,7 @@ GameObject:
   - component: {fileID: 4636607574800065676}
   - component: {fileID: 7073576247110253138}
   - component: {fileID: 497959967228386167}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -387,7 +387,7 @@ GameObject:
   - component: {fileID: 3990709075741255890}
   - component: {fileID: 7934940751580604156}
   - component: {fileID: 2101617694669319986}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Player 1
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -656,7 +656,7 @@ GameObject:
   - component: {fileID: 7794947365411680914}
   - component: {fileID: 3524152979627045939}
   - component: {fileID: 1288001359528863906}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -745,7 +745,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2791160576230124170}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: HoldPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -778,7 +778,7 @@ GameObject:
   - component: {fileID: 8614263343620329909}
   - component: {fileID: 5683704064368189260}
   - component: {fileID: 3607774468087675149}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
