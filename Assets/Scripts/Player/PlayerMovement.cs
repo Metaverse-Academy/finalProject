@@ -13,6 +13,10 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
     public float jumpForce = 8f;
     public float lookSensitivity = 2f;
 
+    [Header("إعدادات النظر - كونترولر")]
+    [SerializeField] private bool invertX = true; // 🔥 عكس المحور الأفقي
+    [SerializeField] private bool invertY = false; // 🔥 عكس المحور العمودي
+
     private CharacterController characterController;
     private Camera playerCamera;
     private float rotationX = 0f;
@@ -73,9 +77,16 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
         move.y = verticalVelocity;
         characterController.Move(move * moveSpeed * Time.deltaTime);
 
-        // النظر
-        transform.Rotate(Vector3.up * m_lookAmt.x * lookSensitivity);
-        rotationX -= m_lookAmt.y * lookSensitivity;
+        // 🔥 النظر مع إعدادات العكس
+        float horizontalLook = m_lookAmt.x * lookSensitivity;
+        float verticalLook = m_lookAmt.y * lookSensitivity;
+
+        // تطبيق إعدادات العكس
+        if (invertX) horizontalLook = -horizontalLook;
+        if (invertY) verticalLook = -verticalLook;
+
+        transform.Rotate(Vector3.up * horizontalLook);
+        rotationX -= verticalLook;
         rotationX = Mathf.Clamp(rotationX, -90f, 90f);
         if (playerCamera != null)
             playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0f, 0f);
@@ -363,5 +374,29 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
     public void FindMissingAnimator()
     {
         FindAnimator();
+    }
+
+    // 🔥 دالة لتبديل إعدادات النظر أثناء اللعبة
+    public void ToggleInvertX()
+    {
+        invertX = !invertX;
+        Debug.Log($"تم تبديل عكس المحور الأفقي إلى: {invertX}");
+    }
+
+    public void ToggleInvertY()
+    {
+        invertY = !invertY;
+        Debug.Log($"تم تبديل عكس المحور العمودي إلى: {invertY}");
+    }
+
+    // 🔥 دوال لضبط الإعدادات مباشرة
+    public void SetInvertX(bool value)
+    {
+        invertX = value;
+    }
+
+    public void SetInvertY(bool value)
+    {
+        invertY = value;
     }
 }
