@@ -22923,6 +22923,10 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 10507
       objectReference: {fileID: 0}
+    - target: {fileID: 7936539829493165107, guid: 5429ab52d1ee99d4699ef853c0daee3d, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8354709752485517818, guid: 5429ab52d1ee99d4699ef853c0daee3d, type: 3}
       propertyPath: m_Mesh
       value: 
