@@ -35,4 +35,19 @@ public class DeliveryCounter : BaseCounter
             }
         }
     }
+
+
+    public void ResetCounter()
+    {
+        if (HasKitchenObject())
+        {
+            // ÇáÍÕæá Úáì ÇáÔíÁ ÇáãæÌæÏ Úáì ÇáØÇæáÉ æÅÊáÇİå
+            KitchenObject kitchenObject = GetKitchenObject();
+            if (kitchenObject != null)
+            {
+                Destroy(kitchenObject.gameObject);
+                ClearKitchenObject(); // ÊÃßÏ ãä ÊİÑíÛ ÇáãÑÌÚ ÃíÖÇğ
+            }
+        }
+    }
 }

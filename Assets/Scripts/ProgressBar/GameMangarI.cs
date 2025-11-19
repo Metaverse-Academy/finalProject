@@ -20,6 +20,8 @@ public class GameMangarI : MonoBehaviour
     private float countDownToStartTimer = 3f;
     private float gamePlayingTimer = 1000f;
 
+    public GameObject ToDoList;
+
     private void Awake()
     {
         if (Instance != null)
@@ -74,6 +76,11 @@ public class GameMangarI : MonoBehaviour
             case State.GameOver:
                 // Implement game over logic here
                 break;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            ToDoList.SetActive(!ToDoList.activeSelf);
         }
     }
 

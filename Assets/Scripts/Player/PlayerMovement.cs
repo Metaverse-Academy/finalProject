@@ -103,6 +103,7 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
                 HandelInteractAlternate();
             }
         }
+        Debug.DrawRay(GetCenterRay().origin, GetCenterRay().direction * interactRange, Color.white);
 
         // Animation handling
         if (anim != null)

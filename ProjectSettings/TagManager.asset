@@ -12,6 +12,7 @@ TagManager:
   - ShoppingCart
   - Player1
   - Player2
+  - Toy
   layers:
   - Default
   - TransparentFX
@@ -25,7 +26,7 @@ TagManager:
   - Pickable
   - Player2
   - Player1
-  - 
+  - Toy
   - 
   - 
   - 
