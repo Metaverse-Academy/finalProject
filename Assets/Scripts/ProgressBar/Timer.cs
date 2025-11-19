@@ -12,7 +12,8 @@ public class Timer : MonoBehaviour
     [Header("On End")]
     [SerializeField] private GameObject dayOverPanel;         
     [SerializeField] private bool pauseGameOnEnd = true;      
-    public UnityEvent onTimerEnded;                           
+    public UnityEvent onTimerEnded;      
+    
 
     private float timeLeft;
     private bool timerOn;

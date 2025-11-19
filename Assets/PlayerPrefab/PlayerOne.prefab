@@ -788,7 +788,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 1.59, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 6038095141322102899}
   m_Father: {fileID: 3736660863720844225}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &6079989870420091695
@@ -1056,8 +1057,8 @@ GameObject:
   - component: {fileID: 5584901347597119536}
   - component: {fileID: 1176393104164990136}
   - component: {fileID: 6930894964238040825}
-  - component: {fileID: 1376866208371488567}
   - component: {fileID: 69675295333168785}
+  - component: {fileID: 5612981418683397031}
   m_Layer: 11
   m_Name: Player 1
   m_TagString: Player
@@ -1278,24 +1279,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0.01, y: 0.89, z: 0.08}
---- !u!114 &1376866208371488567
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2574721826731950952}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e4a3500a9d9e44e2a13976cd844be90, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SupermarketPickupController
-  pickupRange: 3
-  holdPosition: {fileID: 3736660863720844225}
-  pickupKey: 101
-  dropKey: 113
-  playerCamera: {fileID: 6079989870420091695}
-  shoppingCart: {fileID: 6412017483407215562, guid: b71dca55d44a64d718845d5b5ef7074d, type: 3}
 --- !u!95 &69675295333168785
 Animator:
   serializedVersion: 7
@@ -1318,6 +1301,23 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5612981418683397031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2574721826731950952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c187f3bcd911b34799c66eadf49c987, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerPickUpDrop
+  playerCameraTransform: {fileID: 1254257569127123566}
+  ObjectPointTransform: {fileID: 6038095141322102899}
+  pickableLayerMask:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!1 &2603734054465616004
 GameObject:
   m_ObjectHideFlags: 0
@@ -2518,6 +2518,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3102548791515808533}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7287482338533475821
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6038095141322102899}
+  m_Layer: 11
+  m_Name: ObjectPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6038095141322102899
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7287482338533475821}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1.61}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1254257569127123566}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7312873374551114195
 GameObject:
