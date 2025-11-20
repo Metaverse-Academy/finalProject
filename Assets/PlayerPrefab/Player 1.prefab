@@ -371,8 +371,9 @@ MonoBehaviour:
   holdPosition: {fileID: 2791160576230124170}
   pickupKey: 101
   dropKey: 113
+  addToInvoiceKey: 102
   playerCamera: {fileID: 6508150336720796458}
-  shoppingCart: {fileID: 0}
+  invoiceManager: {fileID: 0}
 --- !u!1 &3281665562568399725
 GameObject:
   m_ObjectHideFlags: 0
@@ -427,6 +428,8 @@ MonoBehaviour:
   moveSpeed: 15
   jumpForce: 5
   lookSensitivity: 0.5
+  invertX: 0
+  invertY: 0
   interactRange: 4
   interactLayerMask:
     serializedVersion: 2
@@ -643,8 +646,9 @@ MonoBehaviour:
   holdPosition: {fileID: 4461563026094912452}
   pickupKey: 101
   dropKey: 113
+  addToInvoiceKey: 102
   playerCamera: {fileID: 6508150336720796458}
-  shoppingCart: {fileID: 6412017483407215562, guid: b71dca55d44a64d718845d5b5ef7074d, type: 3}
+  invoiceManager: {fileID: 0}
 --- !u!1 &5684961245571716453
 GameObject:
   m_ObjectHideFlags: 0

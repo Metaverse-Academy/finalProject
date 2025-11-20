@@ -187,7 +187,9 @@ MonoBehaviour:
   holdPosition: {fileID: 0}
   pickupKey: 101
   dropKey: 113
+  addToInvoiceKey: 102
   playerCamera: {fileID: 5678059043173743217}
+  invoiceManager: {fileID: 0}
 --- !u!1 &174238367528960838
 GameObject:
   m_ObjectHideFlags: 0
@@ -2097,6 +2099,7 @@ GameObject:
   - component: {fileID: 4064124961048062020}
   - component: {fileID: 7213142415515891272}
   - component: {fileID: 8260167482118138912}
+  - component: {fileID: 3754923989955552200}
   m_Layer: 0
   m_Name: Player 2
   m_TagString: Player
@@ -2333,8 +2336,9 @@ MonoBehaviour:
   holdPosition: {fileID: 2988062818485613215}
   pickupKey: 101
   dropKey: 113
+  addToInvoiceKey: 102
   playerCamera: {fileID: 5678059043173743217}
-  shoppingCart: {fileID: 6412017483407215562, guid: b71dca55d44a64d718845d5b5ef7074d, type: 3}
+  invoiceManager: {fileID: 0}
 --- !u!95 &8260167482118138912
 Animator:
   serializedVersion: 7
@@ -2357,6 +2361,23 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3754923989955552200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4113983092618811958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c187f3bcd911b34799c66eadf49c987, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerPickUpDrop
+  playerCameraTransform: {fileID: 848073738571649840}
+  ObjectPointTransform: {fileID: 4851922825657999629}
+  pickableLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &4335474060890702628
 GameObject:
   m_ObjectHideFlags: 0
@@ -3185,8 +3206,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6498752035473666226}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.002, y: 1.139, z: 0.523}
+  m_LocalRotation: {x: -0, y: -0, z: -1.5935583e-10, w: 1}
+  m_LocalPosition: {x: -0.0019999985, y: 1.139, z: 0.52299994}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
