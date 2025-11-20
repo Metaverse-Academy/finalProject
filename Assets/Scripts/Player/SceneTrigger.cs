@@ -17,9 +17,16 @@ public class MessageTrigger : MonoBehaviour
     public Button skipButtonRight; // زر التخطي للـ Player1
     public Button skipButtonLeft; // زر التخطي للـ Player2
     
+    [Header("Cursor Settings")]
+    public bool showCursorWhenMessageActive = true; // إظهار الماوس مع الرسالة
+    
     private bool hasTriggered = false; // عشان ما تتكرر الرسالة
     private Coroutine hideCoroutine;
     private GameObject activePanel; // Track which panel is currently active
+    
+    // حفظ حالة الماوس الأصلية
+    private bool originalCursorVisible;
+    private CursorLockMode originalCursorLockMode;
 
     private void Start()
     {
@@ -34,15 +41,19 @@ public class MessageTrigger : MonoBehaviour
             messagePanelLeft.SetActive(false);
         }
 
-        // Setup skip button listeners
+        // Setup skip button listeners - طريقة محسّنة
         if (skipButtonRight != null)
         {
-            skipButtonRight.onClick.AddListener(() => HideMessage(messagePanelRight));
+            skipButtonRight.onClick.RemoveAllListeners(); // مسح أي listeners قديمة
+            skipButtonRight.onClick.AddListener(() => OnSkipButtonClicked(messagePanelRight));
+            Debug.Log("✅ Skip button Right listener added");
         }
         
         if (skipButtonLeft != null)
         {
-            skipButtonLeft.onClick.AddListener(() => HideMessage(messagePanelLeft));
+            skipButtonLeft.onClick.RemoveAllListeners(); // مسح أي listeners قديمة
+            skipButtonLeft.onClick.AddListener(() => OnSkipButtonClicked(messagePanelLeft));
+            Debug.Log("✅ Skip button Left listener added");
         }
     }
 
@@ -89,6 +100,18 @@ public class MessageTrigger : MonoBehaviour
 
         Debug.Log($"📢 Showing message for {playerName}: {messageText}");
 
+        // حفظ حالة الماوس الحالية
+        originalCursorVisible = Cursor.visible;
+        originalCursorLockMode = Cursor.lockState;
+
+        // إظهار الماوس وفك القفل
+        if (showCursorWhenMessageActive)
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            Debug.Log("🖱️ Cursor enabled");
+        }
+
         // Display the message
         textUI.text = messageText;
         panel.SetActive(true);
@@ -107,15 +130,32 @@ public class MessageTrigger : MonoBehaviour
     IEnumerator HideMessageAfterDelay(GameObject panel)
     {
         yield return new WaitForSeconds(messageDuration);
-        Debug.Log("🔙 Hiding message");
+        Debug.Log("🔙 Hiding message (auto)");
+        HideMessage(panel);
+    }
+
+    // دالة جديدة للضغط على الزر
+    void OnSkipButtonClicked(GameObject panel)
+    {
+        Debug.Log("🔘 Skip button clicked!");
         HideMessage(panel);
     }
 
     void HideMessage(GameObject panel)
     {
+        Debug.Log("🔙 Hiding message");
+        
         if (panel != null)
         {
             panel.SetActive(false);
+        }
+
+        // إرجاع حالة الماوس للوضع الأصلي
+        if (showCursorWhenMessageActive)
+        {
+            Cursor.visible = originalCursorVisible;
+            Cursor.lockState = originalCursorLockMode;
+            Debug.Log("🖱️ Cursor restored to original state");
         }
 
         // Stop the hide coroutine if it's running
@@ -127,5 +167,18 @@ public class MessageTrigger : MonoBehaviour
 
         // Uncomment the line below if you want the trigger to work again
         // hasTriggered = false;
+    }
+
+    // إضافة: إخفاء الرسالة عند الخروج من الـ Trigger (اختياري)
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            if (activePanel != null && activePanel.activeSelf)
+            {
+                Debug.Log("🚶 Player left trigger zone, hiding message");
+                HideMessage(activePanel);
+            }
+        }
     }
 }
