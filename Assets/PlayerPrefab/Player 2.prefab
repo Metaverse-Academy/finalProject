@@ -197,12 +197,8 @@ GameObject:
   - component: {fileID: 3840591721748392090}
   - component: {fileID: 4636607574800065676}
   - component: {fileID: 7073576247110253138}
-<<<<<<< HEAD
   - component: {fileID: 7890608596989561041}
   m_Layer: 0
-=======
-  m_Layer: 6
->>>>>>> origin/Naila
   m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -222,7 +218,7 @@ Transform:
   m_LocalScale: {x: 1.612059, y: 1.2577868, z: 1.5611821}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7794947365411680914}
+  m_Father: {fileID: 4461563026094912452}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &6508150336720796458
 Camera:
@@ -359,6 +355,23 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 0}
+--- !u!114 &7890608596989561041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1540038077537123021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69c789d5ee6284ebda1c8d74f66300fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PickupController
+  pickupRange: 3
+  holdPosition: {fileID: 2791160576230124170}
+  pickupKey: 101
+  dropKey: 113
+  playerCamera: {fileID: 6508150336720796458}
 --- !u!1 &3281665562568399725
 GameObject:
   m_ObjectHideFlags: 0
@@ -372,13 +385,8 @@ GameObject:
   - component: {fileID: 3990709075741255890}
   - component: {fileID: 2974229689661782295}
   - component: {fileID: 3241378681764260127}
-<<<<<<< HEAD
   - component: {fileID: -1114880133155195117}
   m_Layer: 0
-=======
-  - component: {fileID: -1774604834480478336}
-  m_Layer: 6
->>>>>>> origin/Naila
   m_Name: Player 2
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -399,6 +407,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7794947365411680914}
+  - {fileID: 2259094180886401643}
   - {fileID: 1860686372707457755}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -617,11 +626,7 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
-<<<<<<< HEAD
 --- !u!114 &-1114880133155195117
-=======
---- !u!114 &-1774604834480478336
->>>>>>> origin/Naila
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -630,7 +635,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 3281665562568399725}
   m_Enabled: 1
   m_EditorHideFlags: 0
-<<<<<<< HEAD
   m_Script: {fileID: 11500000, guid: 2e4a3500a9d9e44e2a13976cd844be90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SupermarketPickupController
@@ -640,12 +644,6 @@ MonoBehaviour:
   dropKey: 113
   playerCamera: {fileID: 6508150336720796458}
   shoppingCart: {fileID: 6412017483407215562, guid: b71dca55d44a64d718845d5b5ef7074d, type: 3}
-=======
-  m_Script: {fileID: 11500000, guid: 080e3b047a80b40918cf854e37ddcca1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerID
-  playerNumber: 2
->>>>>>> origin/Naila
 --- !u!1 &5684961245571716453
 GameObject:
   m_ObjectHideFlags: 0
@@ -679,7 +677,6 @@ Transform:
   m_Children:
   - {fileID: 8614263343620329909}
   - {fileID: 2791160576230124170}
-  - {fileID: 2259094180886401643}
   m_Father: {fileID: 4461563026094912452}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3524152979627045939
