@@ -1,35 +1,46 @@
 using UnityEngine;
 
-
 public class PlayerPickUpDrop : MonoBehaviour
 {
+    public static PlayerPickUpDrop Instance { get; private set; }
+
     [SerializeField] private Transform playerCameraTransform;
     [SerializeField] private Transform ObjectPointTransform;
     [SerializeField] private LayerMask pickableLayerMask;
 
     private ObjectGrabbable ObjectGrabbable;
-    // Update is called once per frame
-    private void Update()
+
+    private void Awake()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Instance == null)
         {
-            if (ObjectGrabbable == null)
-            {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    // »«ﬁÌ «·ﬂÊœ ﬂ„« ÂÊ...
+
+    public void HandelInteract1()
+    {
+        if (ObjectGrabbable == null)
+        {
             float pickupRange = 2f;
             if (Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward, out RaycastHit raycastHit, pickupRange))
             {
-                if(raycastHit.transform.TryGetComponent(out ObjectGrabbable)){
+                if (raycastHit.transform.TryGetComponent(out ObjectGrabbable))
+                {
                     ObjectGrabbable.Grab(ObjectPointTransform);
-
                 }
-            }  
-            }
-            else
-            {
-                ObjectGrabbable.Drop();
-                ObjectGrabbable = null;
             }
         }
-        
+        else
+        {
+            ObjectGrabbable.Drop();
+            ObjectGrabbable = null;
+        }
     }
 }
