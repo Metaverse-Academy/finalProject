@@ -25,7 +25,6 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
     [SerializeField] private float interactRange = 4f;
     private Vector3 lastIntaractinDir;
     [SerializeField] private LayerMask interactLayerMask = -1;
-    
 
     public static event EventHandler OnPickupSomething;
     public event EventHandler<SelectedCounterChangedEventArgs> OnSelectedCounterChanged;
@@ -248,7 +247,6 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
 
     public void OnInteract(InputAction.CallbackContext ctx)
     {
-
         if (!ctx.performed) return;
         if (Time.time < nextInteractTime) return;
 
@@ -277,14 +275,6 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
 
         nextInteractTime = Time.time + interactCooldown;
         HandelInteraction();
-        if (PlayerPickUpDrop.Instance != null)
-        {
-            PlayerPickUpDrop.Instance.HandelInteract1();
-        }
-        else
-        {
-            Debug.LogWarning("PlayerPickUpDrop.Instance is null!");
-        }
     }
 
     public void OnInteractAlternate(InputAction.CallbackContext ctx)
