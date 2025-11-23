@@ -13,4 +13,8 @@ public class GameSceneManger : MonoBehaviour
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(PlayLevel);
     }
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 }
