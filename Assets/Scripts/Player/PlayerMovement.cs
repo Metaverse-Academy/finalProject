@@ -281,7 +281,7 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
     {
         if (!ctx.performed) return;
         if (Time.time < nextInteractTime) return;
-
+        
         if (GameMangarI.Instance == null)
         {
             Debug.LogError("GameMangarI.Instance is null!");
