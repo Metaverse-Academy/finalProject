@@ -8233,7 +8233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e89390ff3f7c624aa249976febc36cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Timer
-  startTimeSeconds: 720
+  startTimeSeconds: 70
   timerText: {fileID: 179836724}
   autoStart: 1
   dayOverPanel: {fileID: 1256520901}
