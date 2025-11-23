@@ -4055,59 +4055,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3361185124121705355, guid: 42e9cad8fa0c145f6a5d249272c0b5a1, type: 3}
   m_PrefabInstance: {fileID: 79501475}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &79740057
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 79740059}
-  - component: {fileID: 79740058}
-  m_Layer: 0
-  m_Name: InvoiceManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &79740058
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 79740057}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d91901db60c4947dd97a95eefec881bf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InvoiceTrigger
-  invoiceButtonRight: {fileID: 1188078039}
-  invoiceButtonLeft: {fileID: 1343421042}
-  invoicePanelRight: {fileID: 1776577947}
-  invoicePanelLeft: {fileID: 834340011}
-  closeButtonRight: {fileID: 1184373163}
-  closeButtonLeft: {fileID: 1833362071}
-  budgetPanelRight: {fileID: 1602643855}
-  budgetPanelLeft: {fileID: 1342454795}
-  showCursorWhenInvoiceActive: 1
---- !u!4 &79740059
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 79740057}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.30032, y: 1.95841, z: 135.35759}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &79919165
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -81646,22 +81593,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29f47758911be40fab1bf204f92faa0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopSystem
-  welcomePanel: {fileID: 1447990760}
+  welcomePanelRight: {fileID: 0}
+  welcomePanelLeft: {fileID: 0}
   welcomeDisplayTime: 4
-  invoicePanel: {fileID: 834340011}
-  itemsContent: {fileID: 1295029999}
-  totalPriceText: {fileID: 608109258}
-  invoiceButton: {fileID: 1343421042}
-  checkoutButton: {fileID: 2138105949}
-  closeButton: {fileID: 1747290481}
-  invoicePrefab: {fileID: 7863646112594226184, guid: 14b45405f7e0749bcaec28d46b1f7e24, type: 3}
-  budgetPanel: {fileID: 1342454795}
-  budgetText: {fileID: 2000268947}
-  moneyIcon: {fileID: 21300000, guid: 06a819b52383d4516881af71c72e7bc2, type: 3}
-  playerBudget: 100
+  invoicePanelRight: {fileID: 0}
+  invoicePanelLeft: {fileID: 0}
+  itemsContentRight: {fileID: 0}
+  itemsContentLeft: {fileID: 0}
+  totalPriceTextRight: {fileID: 0}
+  totalPriceTextLeft: {fileID: 0}
+  invoiceButtonRight: {fileID: 0}
+  invoiceButtonLeft: {fileID: 0}
+  checkoutButtonRight: {fileID: 0}
+  checkoutButtonLeft: {fileID: 0}
+  closeButtonRight: {fileID: 0}
+  closeButtonLeft: {fileID: 0}
+  budgetPanelRight: {fileID: 0}
+  budgetPanelLeft: {fileID: 0}
+  budgetTextRight: {fileID: 0}
+  budgetTextLeft: {fileID: 0}
+  moneyIconRight: {fileID: 0}
+  moneyIconLeft: {fileID: 0}
+  player1Budget: 1000
+  player2Budget: 1000
   moneySprite: {fileID: 21300000, guid: 06a819b52383d4516881af71c72e7bc2, type: 3}
-  playerPrefab: {fileID: 3281665562568399725, guid: 5ec54a72a9ff54c17b26a6cc0d432107, type: 3}
-  playerCamera: {fileID: 0}
+  invoicePrefab: {fileID: 7863646112594226184, guid: 14b45405f7e0749bcaec28d46b1f7e24, type: 3}
   pickupRange: 15
   addKey: 101
   toggleKey: 9
@@ -105924,7 +105880,6 @@ SceneRoots:
   - {fileID: 308354533}
   - {fileID: 1560406970}
   - {fileID: 1380102853}
-  - {fileID: 1576290928}
   - {fileID: 1710605463}
   - {fileID: 1376790095}
   - {fileID: 1269712490}
@@ -105941,10 +105896,10 @@ SceneRoots:
   - {fileID: 495129550}
   - {fileID: 78769305}
   - {fileID: 502289477}
+  - {fileID: 1576290928}
   - {fileID: 903259932}
   - {fileID: 1634366837}
   - {fileID: 1705763725}
   - {fileID: 190290804}
   - {fileID: 1972536840}
   - {fileID: 258919109}
-  - {fileID: 79740059}
