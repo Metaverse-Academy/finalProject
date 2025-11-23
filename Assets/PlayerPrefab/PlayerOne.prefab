@@ -943,8 +943,9 @@ MonoBehaviour:
   holdPosition: {fileID: 0}
   pickupKey: 101
   dropKey: 113
+  addToInvoiceKey: 102
   playerCamera: {fileID: 6079989870420091695}
-  shoppingCart: {fileID: 0}
+  invoiceManager: {fileID: 0}
 --- !u!1 &1990158516096679781
 GameObject:
   m_ObjectHideFlags: 0
@@ -1059,6 +1060,7 @@ GameObject:
   - component: {fileID: 6930894964238040825}
   - component: {fileID: 69675295333168785}
   - component: {fileID: 5612981418683397031}
+  - component: {fileID: 7478435551545108018}
   m_Layer: 11
   m_Name: Player 1
   m_TagString: Player
@@ -1318,6 +1320,19 @@ MonoBehaviour:
   pickableLayerMask:
     serializedVersion: 2
     m_Bits: 512
+--- !u!114 &7478435551545108018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2574721826731950952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 080e3b047a80b40918cf854e37ddcca1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerID
+  playerNumber: 1
 --- !u!1 &2603734054465616004
 GameObject:
   m_ObjectHideFlags: 0

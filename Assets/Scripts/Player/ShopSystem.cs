@@ -5,29 +5,44 @@ using UnityEngine.UI;
 
 public class ShopSystem : MonoBehaviour
 {
-    [Header("=== Welcome Panel ===")]
-    public GameObject welcomePanel;
+    [Header("=== Welcome Panels ===")]
+    public GameObject welcomePanelRight; // للاعب 1
+    public GameObject welcomePanelLeft; // للاعب 2
     public float welcomeDisplayTime = 4f;
 
-    [Header("=== Invoice Panel ===")]
-    public GameObject invoicePanel;
-    public Transform itemsContent;
-    public Text totalPriceText;
-    public Button invoiceButton;
-    public Button checkoutButton;
-    public Button closeButton;
-    public GameObject invoicePrefab;
+    [Header("=== Invoice Panels ===")]
+    public GameObject invoicePanelRight; // للاعب 1
+    public GameObject invoicePanelLeft; // للاعب 2
+    public Transform itemsContentRight; // محتوى الفاتورة للاعب 1
+    public Transform itemsContentLeft; // محتوى الفاتورة للاعب 2
+    public Text totalPriceTextRight; // المجموع للاعب 1
+    public Text totalPriceTextLeft; // المجموع للاعب 2
 
-    [Header("=== Budget Display ===")]
-    public GameObject budgetPanel;
-    public Text budgetText;
-    public Image moneyIcon;
-    public float playerBudget = 1000f;
+    [Header("=== Invoice Buttons ===")]
+    public Button invoiceButtonRight; // زر الفاتورة للاعب 1
+    public Button invoiceButtonLeft; // زر الفاتورة للاعب 2
+    public Button checkoutButtonRight; // زر الدفع للاعب 1
+    public Button checkoutButtonLeft; // زر الدفع للاعب 2
+    public Button closeButtonRight; // زر الإغلاق للاعب 1
+    public Button closeButtonLeft; // زر الإغلاق للاعب 2
+
+    [Header("=== Budget Panels ===")]
+    public GameObject budgetPanelRight; // للاعب 1
+    public GameObject budgetPanelLeft; // للاعب 2
+    public Text budgetTextRight; // نص الميزانية للاعب 1
+    public Text budgetTextLeft; // نص الميزانية للاعب 2
+    public Image moneyIconRight; // أيقونة المال للاعب 1
+    public Image moneyIconLeft; // أيقونة المال للاعب 2
+    
+    [Header("=== Player Budgets ===")]
+    public float player1Budget = 1000f;
+    public float player2Budget = 1000f;
     public Sprite moneySprite;
 
+    [Header("=== Invoice Prefab ===")]
+    public GameObject invoicePrefab;
+
     [Header("=== Player Settings ===")]
-    public GameObject playerPrefab;
-    public Camera playerCamera;
     public float pickupRange = 3f;
     public KeyCode addKey = KeyCode.E;
     public KeyCode toggleKey = KeyCode.Tab;
@@ -41,64 +56,110 @@ public class ShopSystem : MonoBehaviour
     public Color lowBudgetColor = Color.yellow;
     public Color insufficientColor = Color.red;
 
-    private List<PurchaseItem> items = new List<PurchaseItem>();
-    private ShopItem lookingAt;
-    private bool invoiceOpen = false;
-    private bool playerInside = false;
-    private bool buttonVisible = false;
+    // Player 1 data
+    private List<PurchaseItem> player1Items = new List<PurchaseItem>();
+    private ShopItem player1LookingAt;
+    private bool player1InvoiceOpen = false;
+    private bool player1Inside = false;
+    private PlayerID player1;
+    private Camera player1Camera;
+
+    // Player 2 data
+    private List<PurchaseItem> player2Items = new List<PurchaseItem>();
+    private ShopItem player2LookingAt;
+    private bool player2InvoiceOpen = false;
+    private bool player2Inside = false;
+    private PlayerID player2;
+    private Camera player2Camera;
 
     void Start()
     {
-        if (playerCamera == null)
-            playerCamera = Camera.main;
+        // إخفاء كل الـ Panels في البداية
+        HidePanel(welcomePanelRight);
+        HidePanel(welcomePanelLeft);
+        HidePanel(invoicePanelRight);
+        HidePanel(invoicePanelLeft);
+        HidePanel(budgetPanelRight);
+        HidePanel(budgetPanelLeft);
 
-        if (welcomePanel != null)
-            welcomePanel.SetActive(false);
+        // إخفاء أزرار الفواتير
+        HideButton(invoiceButtonRight);
+        HideButton(invoiceButtonLeft);
 
-        if (invoicePanel != null)
-            invoicePanel.SetActive(false);
-
-        if (budgetPanel != null)
-            budgetPanel.SetActive(false);
-
-        if (invoiceButton != null)
-        {
-            invoiceButton.gameObject.SetActive(false);
-            invoiceButton.onClick.AddListener(OpenInvoice);
-        }
-
-        if (checkoutButton != null)
-            checkoutButton.onClick.AddListener(Checkout);
+        // ربط أزرار الفواتير
+        if (invoiceButtonRight != null)
+            invoiceButtonRight.onClick.AddListener(() => OpenInvoice(1));
         
-        if (closeButton != null)
-            closeButton.onClick.AddListener(CloseInvoice);
+        if (invoiceButtonLeft != null)
+            invoiceButtonLeft.onClick.AddListener(() => OpenInvoice(2));
 
-        UpdateBudgetDisplay();
+        // ربط أزرار الدفع
+        if (checkoutButtonRight != null)
+            checkoutButtonRight.onClick.AddListener(() => Checkout(1));
+        
+        if (checkoutButtonLeft != null)
+            checkoutButtonLeft.onClick.AddListener(() => Checkout(2));
+
+        // ربط أزرار الإغلاق
+        if (closeButtonRight != null)
+            closeButtonRight.onClick.AddListener(() => CloseInvoice(1));
+        
+        if (closeButtonLeft != null)
+            closeButtonLeft.onClick.AddListener(() => CloseInvoice(2));
+
+        UpdateBudgetDisplay(1);
+        UpdateBudgetDisplay(2);
+
+        Debug.Log("✅ ShopSystem initialized for 2 players");
     }
 
     void Update()
     {
-        UpdateLookingAt();
-
-        if (Input.GetKeyDown(addKey) && lookingAt != null)
+        // Player 1 logic
+        if (player1Inside)
         {
-            AddItem(lookingAt);
+            UpdateLookingAt(1);
+
+            if (Input.GetKeyDown(addKey) && player1LookingAt != null)
+            {
+                AddItem(1, player1LookingAt);
+            }
+
+            if (Input.GetKeyDown(toggleKey))
+            {
+                if (player1InvoiceOpen)
+                    CloseInvoice(1);
+                else
+                    OpenInvoice(1);
+            }
         }
 
-        if (playerInside && buttonVisible && Input.GetKeyDown(toggleKey))
+        // Player 2 logic
+        if (player2Inside)
         {
-            if (invoiceOpen)
-                CloseInvoice();
-            else
-                OpenInvoice();
+            UpdateLookingAt(2);
+
+            if (Input.GetKeyDown(addKey) && player2LookingAt != null)
+            {
+                AddItem(2, player2LookingAt);
+            }
+
+            if (Input.GetKeyDown(toggleKey))
+            {
+                if (player2InvoiceOpen)
+                    CloseInvoice(2);
+                else
+                    OpenInvoice(2);
+            }
         }
     }
 
-    void UpdateLookingAt()
+    void UpdateLookingAt(int playerNumber)
     {
-        if (playerCamera == null) return;
-        
-        Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+        Camera cam = playerNumber == 1 ? player1Camera : player2Camera;
+        if (cam == null) return;
+
+        Ray ray = new Ray(cam.transform.position, cam.transform.forward);
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, pickupRange))
@@ -106,24 +167,35 @@ public class ShopSystem : MonoBehaviour
             ShopItem item = hit.collider.GetComponent<ShopItem>();
             if (item != null)
             {
-                lookingAt = item;
+                if (playerNumber == 1)
+                    player1LookingAt = item;
+                else
+                    player2LookingAt = item;
                 return;
             }
         }
-        lookingAt = null;
+
+        if (playerNumber == 1)
+            player1LookingAt = null;
+        else
+            player2LookingAt = null;
     }
 
     // ========== Budget Management ==========
 
-    void UpdateBudgetDisplay()
+    void UpdateBudgetDisplay(int playerNumber)
     {
+        float budget = playerNumber == 1 ? player1Budget : player2Budget;
+        Text budgetText = playerNumber == 1 ? budgetTextRight : budgetTextLeft;
+        Image moneyIcon = playerNumber == 1 ? moneyIconRight : moneyIconLeft;
+
         if (budgetText != null)
         {
-            budgetText.text = $"{playerBudget:F2} SAR";
+            budgetText.text = $"{budget:F2} SAR";
             
-            if (playerBudget <= 0)
+            if (budget <= 0)
                 budgetText.color = insufficientColor;
-            else if (playerBudget < 100)
+            else if (budget < 100)
                 budgetText.color = lowBudgetColor;
             else
                 budgetText.color = normalBudgetColor;
@@ -135,28 +207,26 @@ public class ShopSystem : MonoBehaviour
         }
     }
 
-    public bool CanAfford(float amount)
+    public bool CanAfford(int playerNumber, float amount)
     {
-        return playerBudget >= amount;
+        float budget = playerNumber == 1 ? player1Budget : player2Budget;
+        return budget >= amount;
     }
 
-    public void AddMoney(float amount)
+    public bool SpendMoney(int playerNumber, float amount)
     {
-        playerBudget += amount;
-        UpdateBudgetDisplay();
-        Debug.Log($"💵 Added {amount} SAR - New balance: {playerBudget} SAR");
-    }
-
-    public bool SpendMoney(float amount)
-    {
-        if (CanAfford(amount))
+        if (CanAfford(playerNumber, amount))
         {
-            playerBudget -= amount;
-            UpdateBudgetDisplay();
-            Debug.Log($"💸 Spent {amount} SAR - Remaining: {playerBudget} SAR");
+            if (playerNumber == 1)
+                player1Budget -= amount;
+            else
+                player2Budget -= amount;
+
+            UpdateBudgetDisplay(playerNumber);
+            Debug.Log($"💸 Player {playerNumber} spent {amount} SAR - Remaining: {(playerNumber == 1 ? player1Budget : player2Budget)} SAR");
             return true;
         }
-        Debug.Log($"❌ Not enough money! Need {amount} SAR, have {playerBudget} SAR");
+        Debug.Log($"❌ Player {playerNumber} not enough money! Need {amount} SAR");
         return false;
     }
 
@@ -166,49 +236,51 @@ public class ShopSystem : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            playerInside = true;
+            PlayerID playerID = other.GetComponent<PlayerID>();
             
-            if (!buttonVisible)
+            if (playerID == null)
             {
-                if (invoiceButton != null)
-                    invoiceButton.gameObject.SetActive(true);
-                
-                if (budgetPanel != null)
-                    budgetPanel.SetActive(true);
-                
-                buttonVisible = true;
-                
+                Debug.LogWarning("⚠️ Player detected but no PlayerID component!");
+                return;
+            }
+
+            if (playerID.playerNumber == 1)
+            {
+                player1 = playerID;
+                player1Inside = true;
+                player1Camera = playerID.GetComponentInChildren<Camera>();
+
+                // إظهار UI للاعب 1
+                ShowButton(invoiceButtonRight);
+                ShowPanel(budgetPanelRight);
+                ShowPanel(welcomePanelRight);
+
+                StartCoroutine(HideWelcomePanel(welcomePanelRight));
+                UpdateBudgetDisplay(1);
+
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
-                
-                if (welcomePanel != null)
-                {
-                    welcomePanel.SetActive(true);
-                    StartCoroutine(HideWelcomePanel());
-                }
-                
-                UpdateBudgetDisplay();
-                Debug.Log("🏪 Entered shop - Welcome panel shown");
+
+                Debug.Log("🏪 Player 1 entered shop");
             }
-            else
+            else if (playerID.playerNumber == 2)
             {
-                if (invoiceButton != null)
-                    invoiceButton.gameObject.SetActive(false);
-                
-                if (budgetPanel != null)
-                    budgetPanel.SetActive(false);
-                
-                buttonVisible = false;
-                
-                if (welcomePanel != null)
-                    welcomePanel.SetActive(false);
-                
-                CloseInvoice();
-                
-                Cursor.visible = false;
-                Cursor.lockState = CursorLockMode.Locked;
-                
-                Debug.Log("🏪 Entered shop again - Button hidden");
+                player2 = playerID;
+                player2Inside = true;
+                player2Camera = playerID.GetComponentInChildren<Camera>();
+
+                // إظهار UI للاعب 2
+                ShowButton(invoiceButtonLeft);
+                ShowPanel(budgetPanelLeft);
+                ShowPanel(welcomePanelLeft);
+
+                StartCoroutine(HideWelcomePanel(welcomePanelLeft));
+                UpdateBudgetDisplay(2);
+
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+
+                Debug.Log("🏪 Player 2 entered shop");
             }
         }
     }
@@ -217,34 +289,73 @@ public class ShopSystem : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            playerInside = false;
-            Debug.Log("🚶 Left shop zone");
+            PlayerID playerID = other.GetComponent<PlayerID>();
+            
+            if (playerID == null) return;
+
+            if (playerID.playerNumber == 1)
+            {
+                player1Inside = false;
+                player1 = null;
+                player1Camera = null;
+
+                // إخفاء UI للاعب 1
+                HideButton(invoiceButtonRight);
+                HidePanel(budgetPanelRight);
+                HidePanel(welcomePanelRight);
+                CloseInvoice(1);
+
+                Debug.Log("🚶 Player 1 left shop");
+            }
+            else if (playerID.playerNumber == 2)
+            {
+                player2Inside = false;
+                player2 = null;
+                player2Camera = null;
+
+                // إخفاء UI للاعب 2
+                HideButton(invoiceButtonLeft);
+                HidePanel(budgetPanelLeft);
+                HidePanel(welcomePanelLeft);
+                CloseInvoice(2);
+
+                Debug.Log("🚶 Player 2 left shop");
+            }
+
+            // إرجاع الماوس إذا كلا اللاعبين خارج المحل
+            if (!player1Inside && !player2Inside)
+            {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+            }
         }
     }
 
-    IEnumerator HideWelcomePanel()
+    IEnumerator HideWelcomePanel(GameObject panel)
     {
         yield return new WaitForSeconds(welcomeDisplayTime);
         
-        if (welcomePanel != null)
+        if (panel != null)
         {
-            welcomePanel.SetActive(false);
+            panel.SetActive(false);
             Debug.Log("👋 Welcome panel hidden");
         }
     }
 
     // ========== Item Management ==========
 
-    public void AddItem(ShopItem item)
+    public void AddItem(int playerNumber, ShopItem item)
     {
         if (item == null) return;
 
+        List<PurchaseItem> items = playerNumber == 1 ? player1Items : player2Items;
+        
         PurchaseItem existing = items.Find(p => p.itemName == item.itemName);
 
         if (existing != null)
         {
             existing.quantity++;
-            Debug.Log($"➕ Increased: {item.itemName} x{existing.quantity}");
+            Debug.Log($"➕ Player {playerNumber}: Increased {item.itemName} x{existing.quantity}");
         }
         else
         {
@@ -257,45 +368,25 @@ public class ShopSystem : MonoBehaviour
                 originalObject = item.gameObject
             };
             items.Add(newItem);
-            Debug.Log($"✅ Added: {item.itemName} - {item.price} SAR");
+            Debug.Log($"✅ Player {playerNumber}: Added {item.itemName} - {item.price} SAR");
         }
 
         item.gameObject.SetActive(false);
-        lookingAt = null;
         
+        if (playerNumber == 1)
+            player1LookingAt = null;
+        else
+            player2LookingAt = null;
+
+        bool invoiceOpen = playerNumber == 1 ? player1InvoiceOpen : player2InvoiceOpen;
         if (invoiceOpen)
-            UpdateUI();
+            UpdateUI(playerNumber);
     }
 
-    // ========== دوال زيادة ونقصان الكمية ==========
-
-    public PurchaseItem GetPurchaseItem(string name)
+    public void RemoveItem(int playerNumber, PurchaseItem item)
     {
-        return items.Find(p => p.itemName == name);
-    }
+        List<PurchaseItem> items = playerNumber == 1 ? player1Items : player2Items;
 
-    public void IncreaseItemQuantity(PurchaseItem item)
-    {
-        if (item != null)
-        {
-            item.quantity++;
-            Debug.Log($"➕ Increased: {item.itemName} x{item.quantity}");
-            UpdateTotalDisplay();
-        }
-    }
-
-    public void DecreaseItemQuantity(PurchaseItem item)
-    {
-        if (item != null && item.quantity > 1)
-        {
-            item.quantity--;
-            Debug.Log($"➖ Decreased: {item.itemName} x{item.quantity}");
-            UpdateTotalDisplay();
-        }
-    }
-
-    public void RemoveItem(PurchaseItem item)
-    {
         if (item.quantity > 1)
         {
             item.quantity--;
@@ -306,46 +397,53 @@ public class ShopSystem : MonoBehaviour
                 item.originalObject.SetActive(true);
             items.Remove(item);
         }
-        UpdateUI();
+        UpdateUI(playerNumber);
     }
 
-    public void DeleteItem(PurchaseItem item)
+    public void DeleteItem(int playerNumber, PurchaseItem item)
     {
+        List<PurchaseItem> items = playerNumber == 1 ? player1Items : player2Items;
+
         if (item.originalObject != null)
             item.originalObject.SetActive(true);
         items.Remove(item);
-        UpdateTotalDisplay();
+        UpdateTotalDisplay(playerNumber);
     }
 
-    void UpdateTotalDisplay()
+    void UpdateTotalDisplay(int playerNumber)
     {
-        if (totalPriceText != null)
+        Text totalText = playerNumber == 1 ? totalPriceTextRight : totalPriceTextLeft;
+        float budget = playerNumber == 1 ? player1Budget : player2Budget;
+
+        if (totalText != null)
         {
-            float total = GetTotal();
-            totalPriceText.text = $"Total: {total:F2} SAR";
+            float total = GetTotal(playerNumber);
+            totalText.text = $"Total: {total:F2} SAR";
             
-            if (total > playerBudget)
-                totalPriceText.color = insufficientColor;
+            if (total > budget)
+                totalText.color = insufficientColor;
             else
-                totalPriceText.color = normalBudgetColor;
+                totalText.color = normalBudgetColor;
         }
-        UpdateBudgetDisplay();
+        UpdateBudgetDisplay(playerNumber);
     }
 
-    void Checkout()
+    void Checkout(int playerNumber)
     {
-        float total = GetTotal();
+        float total = GetTotal(playerNumber);
         
-        if (!CanAfford(total))
+        if (!CanAfford(playerNumber, total))
         {
-            Debug.Log($"❌ Cannot checkout! Need {total} SAR but only have {playerBudget} SAR");
-            StartCoroutine(ShowInsufficientFundsMessage());
+            Debug.Log($"❌ Player {playerNumber} cannot checkout!");
+            StartCoroutine(ShowInsufficientFundsMessage(playerNumber));
             return;
         }
         
-        if (SpendMoney(total))
+        if (SpendMoney(playerNumber, total))
         {
-            Debug.Log($"💰 Checkout successful: {total} SAR");
+            List<PurchaseItem> items = playerNumber == 1 ? player1Items : player2Items;
+
+            Debug.Log($"💰 Player {playerNumber} checkout successful: {total} SAR");
             
             foreach (PurchaseItem item in items)
             {
@@ -353,47 +451,55 @@ public class ShopSystem : MonoBehaviour
             }
 
             items.Clear();
-            UpdateUI();
-            CloseInvoice();
+            UpdateUI(playerNumber);
+            CloseInvoice(playerNumber);
         }
     }
 
-    IEnumerator ShowInsufficientFundsMessage()
+    IEnumerator ShowInsufficientFundsMessage(int playerNumber)
     {
+        Text budgetText = playerNumber == 1 ? budgetTextRight : budgetTextLeft;
+        float budget = playerNumber == 1 ? player1Budget : player2Budget;
+
         if (budgetText != null)
         {
             Color originalColor = budgetText.color;
             budgetText.color = insufficientColor;
-            budgetText.text = $"⚠️ {playerBudget:F2} SAR";
+            budgetText.text = $"⚠️ {budget:F2} SAR";
             
             yield return new WaitForSeconds(2f);
             
-            UpdateBudgetDisplay();
+            UpdateBudgetDisplay(playerNumber);
         }
     }
 
     // ========== UI ==========
 
-    void UpdateUI()
+    void UpdateUI(int playerNumber)
     {
-        if (itemsContent == null) return;
+        Transform content = playerNumber == 1 ? itemsContentRight : itemsContentLeft;
+        List<PurchaseItem> items = playerNumber == 1 ? player1Items : player2Items;
 
-        foreach (Transform child in itemsContent)
+        if (content == null) return;
+
+        foreach (Transform child in content)
         {
             Destroy(child.gameObject);
         }
 
         foreach (PurchaseItem item in items)
         {
-            CreateItemUI(item);
+            CreateItemUI(playerNumber, item);
         }
 
-        UpdateTotalDisplay();
+        UpdateTotalDisplay(playerNumber);
     }
 
-    void CreateItemUI(PurchaseItem item)
+    void CreateItemUI(int playerNumber, PurchaseItem item)
     {
-        GameObject obj = Instantiate(invoicePrefab, itemsContent);
+        Transform content = playerNumber == 1 ? itemsContentRight : itemsContentLeft;
+
+        GameObject obj = Instantiate(invoicePrefab, content);
         InvoiceItem invoiceItem = obj.GetComponent<InvoiceItem>();
         
         if (invoiceItem != null)
@@ -402,78 +508,45 @@ public class ShopSystem : MonoBehaviour
         }
     }
 
-    void CreateText(GameObject parent, string content, float width)
-    {
-        GameObject textObj = new GameObject("Text");
-        textObj.transform.SetParent(parent.transform, false);
-
-        RectTransform rect = textObj.AddComponent<RectTransform>();
-        rect.sizeDelta = new Vector2(width, 0);
-
-        Text text = textObj.AddComponent<Text>();
-        text.text = content;
-        text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        text.fontSize = fontSize;
-        text.color = Color.white;
-        text.alignment = TextAnchor.MiddleLeft;
-    }
-
-    void CreateButton(GameObject parent, string label, float width, UnityEngine.Events.UnityAction action, Color color)
-    {
-        GameObject btnObj = new GameObject("Button");
-        btnObj.transform.SetParent(parent.transform, false);
-
-        RectTransform rect = btnObj.AddComponent<RectTransform>();
-        rect.sizeDelta = new Vector2(width, 0);
-
-        Image img = btnObj.AddComponent<Image>();
-        img.color = color;
-
-        Button btn = btnObj.AddComponent<Button>();
-        btn.onClick.AddListener(action);
-
-        GameObject textObj = new GameObject("Text");
-        textObj.transform.SetParent(btnObj.transform, false);
-
-        RectTransform textRect = textObj.AddComponent<RectTransform>();
-        textRect.anchorMin = Vector2.zero;
-        textRect.anchorMax = Vector2.one;
-        textRect.sizeDelta = Vector2.zero;
-
-        Text text = textObj.AddComponent<Text>();
-        text.text = label;
-        text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        text.fontSize = fontSize;
-        text.color = Color.white;
-        text.alignment = TextAnchor.MiddleCenter;
-        text.fontStyle = FontStyle.Bold;
-    }
-
     // ========== Invoice Control ==========
 
-    void OpenInvoice()
+    void OpenInvoice(int playerNumber)
     {
-        if (invoicePanel == null) return;
+        GameObject panel = playerNumber == 1 ? invoicePanelRight : invoicePanelLeft;
         
-        invoiceOpen = true;
-        invoicePanel.SetActive(true);
-        UpdateUI();
+        if (panel == null) return;
         
-        Debug.Log("📋 Invoice opened");
+        if (playerNumber == 1)
+            player1InvoiceOpen = true;
+        else
+            player2InvoiceOpen = true;
+
+        panel.SetActive(true);
+        UpdateUI(playerNumber);
+        
+        Debug.Log($"📋 Player {playerNumber} invoice opened");
     }
 
-    void CloseInvoice()
+    void CloseInvoice(int playerNumber)
     {
-        if (invoicePanel == null) return;
+        GameObject panel = playerNumber == 1 ? invoicePanelRight : invoicePanelLeft;
         
-        invoiceOpen = false;
-        invoicePanel.SetActive(false);
+        if (panel == null) return;
         
-        Debug.Log("📋 Invoice closed");
+        if (playerNumber == 1)
+            player1InvoiceOpen = false;
+        else
+            player2InvoiceOpen = false;
+
+        panel.SetActive(false);
+        
+        Debug.Log($"📋 Player {playerNumber} invoice closed");
     }
 
-    float GetTotal()
+    float GetTotal(int playerNumber)
     {
+        List<PurchaseItem> items = playerNumber == 1 ? player1Items : player2Items;
+        
         float total = 0;
         foreach (PurchaseItem item in items)
         {
@@ -482,7 +555,33 @@ public class ShopSystem : MonoBehaviour
         return total;
     }
 
-    // ========== HUD ==========
+    // ========== Helper Methods ==========
+
+    void ShowPanel(GameObject panel)
+    {
+        if (panel != null)
+            panel.SetActive(true);
+    }
+
+    void HidePanel(GameObject panel)
+    {
+        if (panel != null)
+            panel.SetActive(false);
+    }
+
+    void ShowButton(Button button)
+    {
+        if (button != null)
+            button.gameObject.SetActive(true);
+    }
+
+    void HideButton(Button button)
+    {
+        if (button != null)
+            button.gameObject.SetActive(false);
+    }
+
+    // ========== HUD (Optional - يمكن تعطيله إذا تبي) ==========
 
     void OnGUI()
     {
@@ -491,11 +590,21 @@ public class ShopSystem : MonoBehaviour
         style.normal.textColor = Color.white;
         style.fontStyle = FontStyle.Bold;
 
-        if (lookingAt != null && !invoiceOpen)
+        // Player 1 HUD
+        if (player1LookingAt != null && !player1InvoiceOpen && player1Inside)
         {
             GUI.Label(new Rect(10, 10, 400, 30),
-                $"👀 {lookingAt.itemName} - {lookingAt.price} SAR", style);
+                $"👀 P1: {player1LookingAt.itemName} - {player1LookingAt.price} SAR", style);
             GUI.Label(new Rect(10, 35, 400, 30),
+                $"[{addKey}] Add to Invoice", style);
+        }
+
+        // Player 2 HUD
+        if (player2LookingAt != null && !player2InvoiceOpen && player2Inside)
+        {
+            GUI.Label(new Rect(Screen.width - 410, 10, 400, 30),
+                $"👀 P2: {player2LookingAt.itemName} - {player2LookingAt.price} SAR", style);
+            GUI.Label(new Rect(Screen.width - 410, 35, 400, 30),
                 $"[{addKey}] Add to Invoice", style);
         }
     }
