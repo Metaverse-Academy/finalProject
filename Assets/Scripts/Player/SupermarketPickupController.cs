@@ -1,27 +1,22 @@
-using System.Collections.Generic;
 using UnityEngine;
-
-// ============================================
-// File 3: SupermarketPickupController.cs
-// Attach to player or camera
-// ============================================
 
 public class SupermarketPickupController : MonoBehaviour
 {
     [Header("Pickup Settings")]
-    public float pickupRange = 3f; // Pickup range
-    public Transform holdPosition; // Hold position for items
-    public KeyCode pickupKey = KeyCode.E; // Pickup key
-    public KeyCode dropKey = KeyCode.Q; // Drop key
+    public float pickupRange = 3f;
+    public Transform holdPosition;
+    public KeyCode pickupKey = KeyCode.E;
+    public KeyCode dropKey = KeyCode.Q;
+    public KeyCode addToInvoiceKey = KeyCode.F; // مفتاح إضافة للفاتورة
     
     [Header("References")]
-    public Camera playerCamera; // Player camera
-    public ShoppingCart shoppingCart; // Shopping cart
+    public Camera playerCamera;
+    public InvoiceManager invoiceManager; // مرجع للفاتورة
     
     private ShopItem heldItem;
-    private ShopItem lookingAtItem; // Item you're looking at
+    private ShopItem lookingAtItem;
     private float holdDistance = 1.5f;
-    
+
     void Start()
     {
         // Find main camera automatically
@@ -30,13 +25,13 @@ public class SupermarketPickupController : MonoBehaviour
             playerCamera = FindFirstObjectByType<Camera>();
         }
 
-        // Find shopping cart automatically
-        if (shoppingCart == null)
+        // Find invoice manager automatically
+        if (invoiceManager == null)
         {
-            shoppingCart = FindFirstObjectByType<ShoppingCart>();
+            invoiceManager = FindFirstObjectByType<InvoiceManager>();
         }
-        
-        // Create hold position automatically
+
+        // Create hold position if not assigned
         if (holdPosition == null)
         {
             GameObject holdPoint = new GameObject("HoldPosition");
@@ -45,13 +40,19 @@ public class SupermarketPickupController : MonoBehaviour
             holdPosition = holdPoint.transform;
         }
     }
-    
+
     void Update()
     {
         if (heldItem == null)
         {
             CheckForPickup();
             UpdateLookingAtItem();
+            
+            // إضافة للفاتورة مباشرة بدون مسك
+            if (Input.GetKeyDown(addToInvoiceKey) && lookingAtItem != null)
+            {
+                AddItemToInvoice(lookingAtItem);
+            }
         }
         else
         {
@@ -59,29 +60,33 @@ public class SupermarketPickupController : MonoBehaviour
             
             if (Input.GetKeyDown(dropKey))
             {
-                TryDropInCart();
+                DropItem();
+            }
+            
+            // إضافة المنتج الممسوك للفاتورة
+            if (Input.GetKeyDown(addToInvoiceKey))
+            {
+                AddHeldItemToInvoice();
             }
         }
     }
-    
+
     void UpdateLookingAtItem()
     {
-        // Ray ray = playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
         RaycastHit hit;
         
-        if (Physics.Raycast(playerCamera.transform.position,playerCamera.transform.forward, out hit, pickupRange, LayerMask.GetMask("Pickable")))
+        if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, pickupRange))
         {
             ShopItem item = hit.collider.GetComponent<ShopItem>();
-            if (item != null && !item.IsInCart)
+            if (item != null)
             {
                 lookingAtItem = item;
-                Debug.Log($"Looking at: {item.itemName}");
                 return;
             }
         }
         lookingAtItem = null;
     }
-    
+
     void CheckForPickup()
     {
         if (Input.GetKeyDown(pickupKey) && lookingAtItem != null)
@@ -89,7 +94,7 @@ public class SupermarketPickupController : MonoBehaviour
             PickupItem(lookingAtItem);
         }
     }
-    
+
     void PickupItem(ShopItem item)
     {
         heldItem = item;
@@ -98,42 +103,15 @@ public class SupermarketPickupController : MonoBehaviour
         heldItem.transform.localPosition = Vector3.zero;
         heldItem.transform.localRotation = Quaternion.identity;
         
-        Debug.Log($"🛒 Picked up: {heldItem.itemName} - {heldItem.price} $");
+        Debug.Log($"🛍️ Picked up: {heldItem.itemName} - {heldItem.price} SAR");
     }
-    
+
     void HoldItem()
     {
         heldItem.transform.position = holdPosition.position;
         heldItem.transform.rotation = holdPosition.rotation;
     }
-    
-    void TryDropInCart()
-    {
-        if (shoppingCart == null)
-        {
-            // Normal drop if no cart exists
-            DropItem();
-            return;
-        }
-        
-        // Check distance between item and cart
-        float distance = Vector3.Distance(heldItem.transform.position, shoppingCart.transform.position);
-        
-        if (distance <= shoppingCart.dropDetectionRadius)
-        {
-            // Place item in cart
-            if (shoppingCart.TryAddItem(heldItem))
-            {
-                heldItem = null;
-            }
-        }
-        else
-        {
-            // Drop item on ground
-            DropItem();
-        }
-    }
-    
+
     void DropItem()
     {
         heldItem.transform.parent = null;
@@ -141,7 +119,30 @@ public class SupermarketPickupController : MonoBehaviour
         Debug.Log($"⬇️ Dropped: {heldItem.itemName}");
         heldItem = null;
     }
-    
+
+    // إضافة المنتج الممسوك للفاتورة
+    void AddHeldItemToInvoice()
+    {
+        if (heldItem == null || invoiceManager == null) return;
+
+        invoiceManager.AddPurchase(heldItem, heldItem.gameObject);
+        heldItem.gameObject.SetActive(false);
+        heldItem = null;
+        
+        Debug.Log("✅ Item added to invoice");
+    }
+
+    // إضافة المنتج للفاتورة بدون مسكه
+    void AddItemToInvoice(ShopItem item)
+    {
+        if (item == null || invoiceManager == null) return;
+
+        invoiceManager.AddPurchase(item, item.gameObject);
+        item.gameObject.SetActive(false);
+        
+        Debug.Log($"✅ Added to invoice: {item.itemName}");
+    }
+
     void OnGUI()
     {
         GUIStyle style = new GUIStyle();
@@ -153,34 +154,36 @@ public class SupermarketPickupController : MonoBehaviour
         if (heldItem != null)
         {
             GUI.Label(new Rect(10, 10, 400, 30),
-                $"🛍️ Holding: {heldItem.itemName} ({heldItem.price} $)", style);
+                $"🛍️ Holding: {heldItem.itemName} ({heldItem.price} SAR)", style);
             GUI.Label(new Rect(10, 40, 400, 30),
-                $"Press [{dropKey}] to drop in cart", style);
+                $"Press [{addToInvoiceKey}] to add to invoice", style);
+            GUI.Label(new Rect(10, 70, 400, 30),
+                $"Press [{dropKey}] to drop", style);
         }
         // Display item you're looking at
         else if (lookingAtItem != null)
         {
             GUI.Label(new Rect(10, 10, 400, 30),
-                $"👀 {lookingAtItem.itemName} - {lookingAtItem.price} $", style);
+                $"👀 {lookingAtItem.itemName} - {lookingAtItem.price} SAR", style);
             GUI.Label(new Rect(10, 40, 400, 30),
                 $"Press [{pickupKey}] to pick up", style);
+            GUI.Label(new Rect(10, 70, 400, 30),
+                $"Press [{addToInvoiceKey}] to add to invoice", style);
         }
         
-        // Display cart information
-        if (shoppingCart != null)
+        // Display invoice information
+        if (invoiceManager != null)
         {
             GUI.Label(new Rect(10, Screen.height - 60, 400, 30),
-                $"🛒 Products: {shoppingCart.GetItemCount()}", style);
-            GUI.Label(new Rect(10, Screen.height - 30, 400, 30),
-                $"💰 Total: {shoppingCart.GetTotalPrice()} $", style);
+                $"📋 Invoice Items: {invoiceManager.GetPurchaseCount()}", style);
         }
         
         // Control instructions
         style.fontSize = 16;
-        GUI.Label(new Rect(Screen.width - 250, 10, 240, 30),
-            $"[{pickupKey}] Pick up | [{dropKey}] Drop", style);
+        GUI.Label(new Rect(Screen.width - 350, 10, 340, 30),
+            $"[{pickupKey}] Pick | [{dropKey}] Drop | [{addToInvoiceKey}] Add to Invoice", style);
     }
-    
+
     void OnDrawGizmos()
     {
         if (playerCamera != null)

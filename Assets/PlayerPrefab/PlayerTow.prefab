@@ -188,7 +188,9 @@ MonoBehaviour:
   holdPosition: {fileID: 0}
   pickupKey: 101
   dropKey: 113
+  addToInvoiceKey: 102
   playerCamera: {fileID: 5678059043173743217}
+  invoiceManager: {fileID: 0}
 --- !u!1 &174238367528960838
 GameObject:
   m_ObjectHideFlags: 0
@@ -1669,6 +1671,7 @@ GameObject:
   - component: {fileID: 7213142415515891272}
   - component: {fileID: 8260167482118138912}
   - component: {fileID: 8213327325915880776}
+  - component: {fileID: 2451919345624606617}
   m_Layer: 0
   m_Name: Player 2
   m_TagString: Player
@@ -1904,8 +1907,9 @@ MonoBehaviour:
   holdPosition: {fileID: 2988062818485613215}
   pickupKey: 101
   dropKey: 113
+  addToInvoiceKey: 102
   playerCamera: {fileID: 5678059043173743217}
-  shoppingCart: {fileID: 6412017483407215562, guid: b71dca55d44a64d718845d5b5ef7074d, type: 3}
+  invoiceManager: {fileID: 0}
 --- !u!95 &8260167482118138912
 Animator:
   serializedVersion: 7
@@ -1945,6 +1949,19 @@ MonoBehaviour:
   pickableLayerMask:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!114 &2451919345624606617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4113983092618811958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 080e3b047a80b40918cf854e37ddcca1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerID
+  playerNumber: 1
 --- !u!1 &4335474060890702628
 GameObject:
   m_ObjectHideFlags: 0

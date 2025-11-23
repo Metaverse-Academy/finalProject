@@ -1,29 +1,30 @@
 using UnityEngine;
 
-// ضع هذا السكريبت على الأشياء التي تريد التقاطها
+// Attach this script to objects you want to pick up
 public class Pickupable : MonoBehaviour
 {
-    public string itemName = "عنصر"; // اسم العنصر
-    private Rigidbody rb;
+    public string itemName = "Item"; // Item name
     
+    private Rigidbody rb;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
     }
-    
+
     public void OnPickup()
     {
-        // عند الالتقاط: تعطيل الفيزياء
+        // On pickup: disable physics
         if (rb != null)
         {
             rb.isKinematic = true;
         }
         GetComponent<Collider>().enabled = false;
     }
-    
+
     public void OnDrop()
     {
-        // عند الإفلات: تفعيل الفيزياء
+        // On drop: enable physics
         if (rb != null)
         {
             rb.isKinematic = false;

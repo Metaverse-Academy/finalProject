@@ -1,58 +1,40 @@
 using UnityEngine;
-using System.Collections.Generic;
-
-// ============================================
-// File 1: ShopItem.cs
-// Attach to each product in the supermarket
-// ============================================
 
 public class ShopItem : MonoBehaviour
 {
-    [Header("Product Information")]
-    public string itemName = "Product"; // Product name
-    public float price = 10f; // Price
+    [Header("Product Info")]
+    public string itemName = "Product";
+    public float price = 10f;
+    public Sprite itemIcon;
     
     private Rigidbody rb;
     private Collider col;
-    private bool isInCart = false;
-    
-    void Awake()
+
+    void Start()
     {
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
     }
-    
+
     public void OnPickup()
     {
-        // On pickup: disable physics
         if (rb != null)
         {
             rb.isKinematic = true;
+            rb.useGravity = false;
         }
-        col.enabled = false;
+        if (col != null)
+            col.enabled = false;
     }
-    
+
     public void OnDrop()
     {
-        // On drop: enable physics
         if (rb != null)
         {
             rb.isKinematic = false;
+            rb.useGravity = true;
         }
-        col.enabled = true;
-    }
-    
-    public void AddToCart()
-    {
-        isInCart = true;
-        if (rb != null)
-        {
-            rb.isKinematic = true;
-        }
-    }
-    
-    public bool IsInCart
-    {
-        get { return isInCart; }
+        if (col != null)
+            col.enabled = true;
     }
 }
