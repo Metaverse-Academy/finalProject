@@ -248,8 +248,9 @@ public class ShopSystem : MonoBehaviour
             {
                 player1 = playerID;
                 player1Inside = true;
-                player1Camera = playerID.GetComponentInChildren<Camera>();
-
+                player1Camera = playerID.playerCamera;
+                if(player1Camera!=null)
+                Debug.Log($"We Found Player 1 camera{player1Camera.name}");
                 // إظهار UI للاعب 1
                 ShowButton(invoiceButtonRight);
                 ShowPanel(budgetPanelRight);

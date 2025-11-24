@@ -768,7 +768,6 @@ GameObject:
   - component: {fileID: 4286700615735079071}
   - component: {fileID: 5650157893511543945}
   - component: {fileID: 7789972484453671511}
-  - component: {fileID: 637529134474150770}
   m_Layer: 11
   m_Name: Camera
   m_TagString: Untagged
@@ -927,25 +926,6 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 0}
---- !u!114 &637529134474150770
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1976727111945478856}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e4a3500a9d9e44e2a13976cd844be90, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SupermarketPickupController
-  pickupRange: 3
-  holdPosition: {fileID: 0}
-  pickupKey: 101
-  dropKey: 113
-  addToInvoiceKey: 102
-  playerCamera: {fileID: 6079989870420091695}
-  invoiceManager: {fileID: 0}
 --- !u!1 &1990158516096679781
 GameObject:
   m_ObjectHideFlags: 0
@@ -1108,8 +1088,11 @@ MonoBehaviour:
   interactLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  holdPoint: {fileID: 5090766511190658182}
+  pickupLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
   interactCooldown: 0.15
+  holdPoint: {fileID: 5090766511190658182}
 --- !u!114 &1176393104164990136
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1333,6 +1316,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerID
   playerNumber: 1
+  playerCamera: {fileID: 6079989870420091695}
 --- !u!1 &2603734054465616004
 GameObject:
   m_ObjectHideFlags: 0
