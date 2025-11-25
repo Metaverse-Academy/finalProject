@@ -2294,8 +2294,11 @@ MonoBehaviour:
   interactLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  holdPoint: {fileID: 4851922825657999629}
+  pickupLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
   interactCooldown: 0.15
+  holdPoint: {fileID: 4851922825657999629}
 --- !u!143 &4064124961048062020
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2333,13 +2336,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e4a3500a9d9e44e2a13976cd844be90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SupermarketPickupController
-  pickupRange: 3
-  holdPosition: {fileID: 2988062818485613215}
-  pickupKey: 101
-  dropKey: 113
-  addToInvoiceKey: 102
-  playerCamera: {fileID: 5678059043173743217}
-  invoiceManager: {fileID: 0}
 --- !u!95 &8260167482118138912
 Animator:
   serializedVersion: 7
@@ -2392,6 +2388,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerID
   playerNumber: 2
+  playerCamera: {fileID: 5678059043173743217}
 --- !u!1 &4335474060890702628
 GameObject:
   m_ObjectHideFlags: 0

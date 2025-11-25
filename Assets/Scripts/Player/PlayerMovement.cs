@@ -14,30 +14,47 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
     public float lookSensitivity = 2f;
 
     [Header("إعدادات النظر - كونترولر")]
-    [SerializeField] private bool invertX = true; // 🔥 عكس المحور الأفقي
-    [SerializeField] private bool invertY = false; // 🔥 عكس المحور العمودي
+    [SerializeField] private bool invertX = true;
+    [SerializeField] private bool invertY = false;
+
+    [Header("إعدادات التفاعل")]
+    [SerializeField] private float interactRange = 4f;
+    [SerializeField] private LayerMask interactLayerMask = -1;
+    [SerializeField] private LayerMask pickupLayerMask;
+    [SerializeField] private float interactCooldown = 0.15f;
+
+    [Header("إعدادات أخرى")]
+    [SerializeField] private Transform holdPoint;
 
     private CharacterController characterController;
     private Camera playerCamera;
     private float rotationX = 0f;
     private float verticalVelocity = 0f;
-
-    [SerializeField] private float interactRange = 4f;
+    private float nextInteractTime = 0f;
     private Vector3 lastIntaractinDir;
-    [SerializeField] private LayerMask interactLayerMask = -1;
+    private KitchenObject kitchenObject;
+    private IInteractable selectedCounter;
+    private Animator anim;
 
     public static event EventHandler OnPickupSomething;
     public event EventHandler<SelectedCounterChangedEventArgs> OnSelectedCounterChanged;
+    
     public class SelectedCounterChangedEventArgs : EventArgs
     {
         public IInteractable selectedCounter;
     }
 
-    private KitchenObject kitchenObject;
-    [SerializeField] private Transform holdPoint;
-    private IInteractable selectedCounter;
-    private Vector2 moveInput;
-    private Animator anim;
+    // 🔥 دالة للحصول على الـ LayerMask المدمج
+    private LayerMask GetCombinedLayerMask()
+    {
+        return interactLayerMask | pickupLayerMask;
+    }
+
+    // 🔥 دالة للتحقق إذا كان الكائن في layer الالتقاط
+    private bool IsInPickupLayer(GameObject obj)
+    {
+        return ((1 << obj.layer) & pickupLayerMask) != 0;
+    }
 
     private void Awake()
     {
@@ -45,7 +62,6 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
         playerCamera = GetComponentInChildren<Camera>();
         anim = GetComponentInChildren<Animator>();
 
-        // Debug all components
         Debug.Log($"PlayerMovement Awake - CharacterController: {characterController != null}, Camera: {playerCamera != null}, Animator: {anim != null}");
     }
 
@@ -77,17 +93,17 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
         move.y = verticalVelocity;
         characterController.Move(move * moveSpeed * Time.deltaTime);
 
-        // 🔥 النظر مع إعدادات العكس
+        // النظر مع إعدادات العكس
         float horizontalLook = m_lookAmt.x * lookSensitivity;
         float verticalLook = m_lookAmt.y * lookSensitivity;
 
-        // تطبيق إعدادات العكس
         if (invertX) horizontalLook = -horizontalLook;
         if (invertY) verticalLook = -verticalLook;
 
         transform.Rotate(Vector3.up * horizontalLook);
         rotationX -= verticalLook;
         rotationX = Mathf.Clamp(rotationX, -90f, 90f);
+        
         if (playerCamera != null)
             playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0f, 0f);
 
@@ -103,6 +119,7 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
                 HandelInteractAlternate();
             }
         }
+        
         Debug.DrawRay(GetCenterRay().origin, GetCenterRay().direction * interactRange, Color.white);
 
         // Animation handling
@@ -124,8 +141,15 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
         Ray centerRay = GetCenterRay();
         Debug.DrawRay(centerRay.origin, centerRay.direction * interactRange, Color.green);
 
-        if (Physics.Raycast(centerRay, out RaycastHit hit, interactRange, interactLayerMask, QueryTriggerInteraction.Collide))
+        LayerMask combinedMask = GetCombinedLayerMask();
+
+        if (Physics.Raycast(centerRay, out RaycastHit hit, interactRange, combinedMask, QueryTriggerInteraction.Collide))
         {
+            if (IsInPickupLayer(hit.transform.gameObject))
+            {
+                Debug.Log("Found pickupable object: " + hit.transform.name);
+            }
+
             if (hit.transform.TryGetComponent(out IInteractable interactable))
             {
                 SetSelectedCounter(interactable);
@@ -155,7 +179,9 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
         Vector3 startPoint = centerRay.origin;
         Vector3 direction = centerRay.direction;
 
-        if (Physics.Raycast(startPoint, direction, out RaycastHit hit, interactRange, interactLayerMask, QueryTriggerInteraction.Collide))
+        LayerMask combinedMask = GetCombinedLayerMask();
+
+        if (Physics.Raycast(startPoint, direction, out RaycastHit hit, interactRange, combinedMask, QueryTriggerInteraction.Collide))
         {
             HandleHit(hit);
             return;
@@ -168,6 +194,11 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
     private void HandleHit(RaycastHit hit)
     {
         Debug.Log("HIT: " + hit.transform.name + " at distance " + hit.distance);
+
+        if (IsInPickupLayer(hit.transform.gameObject))
+        {
+            Debug.Log("Hit pickupable object: " + hit.transform.name);
+        }
 
         if (hit.transform.TryGetComponent(out IInteractable interactableCounter))
         {
@@ -198,7 +229,9 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
 
         Debug.DrawRay(startPoint, direction * interactRange, Color.yellow, 2f);
 
-        if (Physics.Raycast(startPoint, direction, out RaycastHit raycastHit, interactRange, interactLayerMask, QueryTriggerInteraction.Collide))
+        LayerMask combinedMask = GetCombinedLayerMask();
+
+        if (Physics.Raycast(startPoint, direction, out RaycastHit raycastHit, interactRange, combinedMask, QueryTriggerInteraction.Collide))
         {
             Debug.Log("Interact Alternate Hit: " + raycastHit.transform.name);
 
@@ -242,15 +275,11 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
             m_jumpPressed = false;
     }
 
-    [SerializeField] private float interactCooldown = 0.15f;
-    private float nextInteractTime = 0f;
-
     public void OnInteract(InputAction.CallbackContext ctx)
     {
         if (!ctx.performed) return;
         if (Time.time < nextInteractTime) return;
 
-        // Check for null references first
         if (GameMangarI.Instance == null)
         {
             Debug.LogError("GameMangarI.Instance is null!");
@@ -266,7 +295,6 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
         if (anim == null)
         {
             Debug.LogError("Animator is null! Cannot play interact animation");
-            // Continue without animation rather than crashing
         }
         else
         {
@@ -281,7 +309,7 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
     {
         if (!ctx.performed) return;
         if (Time.time < nextInteractTime) return;
-        
+
         if (GameMangarI.Instance == null)
         {
             Debug.LogError("GameMangarI.Instance is null!");
@@ -353,7 +381,6 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
         return playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
     }
 
-    // Emergency fix for missing animator
     private void FindAnimator()
     {
         if (anim == null)
@@ -370,14 +397,12 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
         }
     }
 
-    // Call this if you need to manually fix the animator
     [ContextMenu("Find Missing Animator")]
     public void FindMissingAnimator()
     {
         FindAnimator();
     }
 
-    // 🔥 دالة لتبديل إعدادات النظر أثناء اللعبة
     public void ToggleInvertX()
     {
         invertX = !invertX;
@@ -390,7 +415,6 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParant
         Debug.Log($"تم تبديل عكس المحور العمودي إلى: {invertY}");
     }
 
-    // 🔥 دوال لضبط الإعدادات مباشرة
     public void SetInvertX(bool value)
     {
         invertX = value;
