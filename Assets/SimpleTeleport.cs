@@ -1,37 +1,43 @@
 using UnityEngine;
 
-public class SimpleTeleport : MonoBehaviour
+public class TeleportPoint : MonoBehaviour
 {
-    // Assign these in the Inspector
-    public Transform point1;  // Starting point
-    public Transform point2;  // Destination point
-    public string playerTag = "Player"; // Player tag
+    [Header("Teleport Settings")]
+    public Transform destinationPoint; // النقطة اللي بينقل لها
+    public string playerTag = "Player";
+    public bool rotatePlayer = false;
+    public float cooldownTime = 0.5f;
     
-    // يتم استدعاء هذه الدالة عندما يلمس اللاعب الـ Collider
+    private float lastTeleportTime = 0f;
+
     void OnTriggerEnter(Collider other)
     {
-        // تحقق إذا كان الكائن الذي لمس هو اللاعب
-        if (other.CompareTag(playerTag))
+        if (other.CompareTag(playerTag) && destinationPoint != null)
         {
-            TeleportPlayer(other.gameObject);
+            // تحقق من الـ Cooldown
+            if (Time.time - lastTeleportTime > cooldownTime)
+            {
+                TeleportPlayer(other.gameObject);
+                lastTeleportTime = Time.time;
+            }
         }
     }
-    
+
     void TeleportPlayer(GameObject player)
     {
-        if (player != null && point2 != null)
+        if (player == null || destinationPoint == null)
         {
-            // انقل اللاعب إلى موقع النقطة 2
-            player.transform.position = point2.position;
-            
-            // اختياري: دوران اللاعب ليطابق دوران النقطة 2
-            // player.transform.rotation = point2.rotation;
-            
-            Debug.Log("Player teleported to Point 2!");
+            Debug.LogWarning("⚠️ Player or Destination Point is not assigned!");
+            return;
         }
-        else
-        {
-            Debug.LogWarning("Player or Point2 is not assigned!");
-        }
+
+        // انقل اللاعب
+        player.transform.position = destinationPoint.position;
+        
+        // دور اللاعب (اختياري)
+        if (rotatePlayer)
+            player.transform.rotation = destinationPoint.rotation;
+        
+        Debug.Log($"🚀 Player teleported from {gameObject.name} to {destinationPoint.name}");
     }
 }

@@ -22,7 +22,7 @@ public class PlayerPickUpDrop : MonoBehaviour
                     ObjectGrabbable.Grab(ObjectPointTransform);
 
                 }
-            }  
+            }
             }
             else
             {
@@ -30,6 +30,26 @@ public class PlayerPickUpDrop : MonoBehaviour
                 ObjectGrabbable = null;
             }
         }
-        
+        if (Input.GetKeyDown(KeyCode.JoystickButton3))
+        {
+            if (ObjectGrabbable == null)
+            {
+                float pickupRange = 2f;
+                if (Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward, out RaycastHit raycastHit, pickupRange))
+                {
+                    if (raycastHit.transform.TryGetComponent(out ObjectGrabbable))
+                    {
+                        ObjectGrabbable.Grab(ObjectPointTransform);
+
+                    }
+                }
+            }
+            else
+            {
+                ObjectGrabbable.Drop();
+                ObjectGrabbable = null;
+            }
+        }
+
     }
 }

@@ -2,41 +2,42 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class ShopSystem : MonoBehaviour
 {
     [Header("=== Welcome Panels ===")]
-    public GameObject welcomePanelRight; // للاعب 1
-    public GameObject welcomePanelLeft; // للاعب 2
+    public GameObject welcomePanelRight;
+    public GameObject welcomePanelLeft;
     public float welcomeDisplayTime = 4f;
 
     [Header("=== Invoice Panels ===")]
-    public GameObject invoicePanelRight; // للاعب 1
-    public GameObject invoicePanelLeft; // للاعب 2
-    public Transform itemsContentRight; // محتوى الفاتورة للاعب 1
-    public Transform itemsContentLeft; // محتوى الفاتورة للاعب 2
-    public Text totalPriceTextRight; // المجموع للاعب 1
-    public Text totalPriceTextLeft; // المجموع للاعب 2
+    public GameObject invoicePanelRight;
+    public GameObject invoicePanelLeft;
+    public Transform itemsContentRight;
+    public Transform itemsContentLeft;
+    public Text totalPriceTextRight;
+    public Text totalPriceTextLeft;
 
     [Header("=== Invoice Buttons ===")]
-    public Button invoiceButtonRight; // زر الفاتورة للاعب 1
-    public Button invoiceButtonLeft; // زر الفاتورة للاعب 2
-    public Button checkoutButtonRight; // زر الدفع للاعب 1
-    public Button checkoutButtonLeft; // زر الدفع للاعب 2
-    public Button closeButtonRight; // زر الإغلاق للاعب 1
-    public Button closeButtonLeft; // زر الإغلاق للاعب 2
+    public Button invoiceButtonRight;
+    public Button invoiceButtonLeft;
+    public Button checkoutButtonRight;
+    public Button checkoutButtonLeft;
+    public Button closeButtonRight;
+    public Button closeButtonLeft;
 
     [Header("=== Budget Panels ===")]
-    public GameObject budgetPanelRight; // للاعب 1
-    public GameObject budgetPanelLeft; // للاعب 2
-    public Text budgetTextRight; // نص الميزانية للاعب 1
-    public Text budgetTextLeft; // نص الميزانية للاعب 2
-    public Image moneyIconRight; // أيقونة المال للاعب 1
-    public Image moneyIconLeft; // أيقونة المال للاعب 2
+    public GameObject budgetPanelRight;
+    public GameObject budgetPanelLeft;
+    public Text budgetTextRight;
+    public Text budgetTextLeft;
+    public Image moneyIconRight;
+    public Image moneyIconLeft;
     
     [Header("=== Player Budgets ===")]
-    public float player1Budget = 1000f;
-    public float player2Budget = 1000f;
+    public float player1Budget = 100f;
+    public float player2Budget = 100f;
     public Sprite moneySprite;
 
     [Header("=== Invoice Prefab ===")]
@@ -56,33 +57,74 @@ public class ShopSystem : MonoBehaviour
     public Color lowBudgetColor = Color.yellow;
     public Color insufficientColor = Color.red;
 
-    // Player 1 data
+    [Header("=== Audio Settings ===")]
+    public AudioClip addItemSound;
+    public AudioClip checkoutSound;
+    public AudioClip insufficientFundsSound;
+    [Range(0f, 1f)]
+    public float soundVolume = 0.7f;
+    
+    private AudioSource audioSource;
+
+    [Header("=== Product Verification ===")]
+    [Tooltip("قائمة المنتجات المطلوبة للتحقق")]
+    public List<string> requiredProducts = new List<string>();
+    
+    [Header("=== Verification Panels ===")]
+    public GameObject verificationPanelRight; // بانل التحقق للاعب 1
+    public GameObject verificationPanelLeft; // بانل التحقق للاعب 2
+    public Text verificationTextRight; // نص التحقق للاعب 1
+    public Text verificationTextLeft; // نص التحقق للاعب 2
+    public Button verificationCloseButtonRight; // زر إغلاق التحقق للاعب 1
+    public Button verificationCloseButtonLeft; // زر إغلاق التحقق للاعب 2
+    
+    [Header("=== Verification Messages ===")]
+    [TextArea(3, 5)]
+    public string successMessage = "✅ Well done! You have all the products you need!";
+    [TextArea(3, 5)]
+    public string failMessage = "❌ Sorry! You do not have all the requested products";
+    
+    [Header("=== Verification Colors ===")]
+    public Color successColor = Color.green;
+    public Color failColor = Color.red;
+    
+    [Header("=== Verification Audio ===")]
+    public AudioClip verificationSuccessSound;
+    public AudioClip verificationFailSound;
+
+    // Player data
     private List<PurchaseItem> player1Items = new List<PurchaseItem>();
     private ShopItem player1LookingAt;
     private bool player1InvoiceOpen = false;
     private bool player1Inside = false;
     private PlayerID player1;
     private Camera player1Camera;
+    private bool player1Verified = false; // تحقق مرة واحدة فقط
 
-    // Player 2 data
     private List<PurchaseItem> player2Items = new List<PurchaseItem>();
     private ShopItem player2LookingAt;
     private bool player2InvoiceOpen = false;
     private bool player2Inside = false;
     private PlayerID player2;
     private Camera player2Camera;
+    private bool player2Verified = false; // تحقق مرة واحدة فقط
 
     void Start()
     {
-        // إخفاء كل الـ Panels في البداية
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.volume = soundVolume;
+
+        // إخفاء كل الـ Panels
         HidePanel(welcomePanelRight);
         HidePanel(welcomePanelLeft);
         HidePanel(invoicePanelRight);
         HidePanel(invoicePanelLeft);
         HidePanel(budgetPanelRight);
         HidePanel(budgetPanelLeft);
+        HidePanel(verificationPanelRight);
+        HidePanel(verificationPanelLeft);
 
-        // إخفاء أزرار الفواتير
         HideButton(invoiceButtonRight);
         HideButton(invoiceButtonLeft);
 
@@ -107,10 +149,17 @@ public class ShopSystem : MonoBehaviour
         if (closeButtonLeft != null)
             closeButtonLeft.onClick.AddListener(() => CloseInvoice(2));
 
+        // ربط أزرار إغلاق التحقق
+        if (verificationCloseButtonRight != null)
+            verificationCloseButtonRight.onClick.AddListener(() => CloseVerificationPanel(1));
+        
+        if (verificationCloseButtonLeft != null)
+            verificationCloseButtonLeft.onClick.AddListener(() => CloseVerificationPanel(2));
+
         UpdateBudgetDisplay(1);
         UpdateBudgetDisplay(2);
 
-        Debug.Log("✅ ShopSystem initialized for 2 players");
+        Debug.Log("✅ ShopSystem initialized with Product Verification");
     }
 
     void Update()
@@ -179,6 +228,109 @@ public class ShopSystem : MonoBehaviour
             player1LookingAt = null;
         else
             player2LookingAt = null;
+    }
+
+    // ========== Audio Methods ==========
+    
+    void PlaySound(AudioClip clip)
+    {
+        if (clip != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(clip, soundVolume);
+        }
+    }
+
+    // ========== Product Verification ==========
+    
+    bool CheckPlayerProducts(int playerNumber)
+    {
+        // إذا ما فيه منتجات مطلوبة، ارجع true
+        if (requiredProducts == null || requiredProducts.Count == 0)
+        {
+            Debug.Log("⚠️ No required products set!");
+            return true;
+        }
+
+        List<PurchaseItem> playerItems = playerNumber == 1 ? player1Items : player2Items;
+
+        if (playerItems == null || playerItems.Count == 0)
+        {
+            Debug.Log($"❌ Player {playerNumber} has no items in invoice");
+            return false;
+        }
+
+        Debug.Log($"🔍 Checking Player {playerNumber} products:");
+
+        // التحقق من كل منتج مطلوب
+        foreach (string requiredProduct in requiredProducts)
+        {
+            bool found = playerItems.Any(item => item.itemName.Trim().ToLower() == requiredProduct.Trim().ToLower());
+
+            if (!found)
+            {
+                Debug.Log($"❌ Missing: {requiredProduct}");
+                return false;
+            }
+            else
+            {
+                Debug.Log($"✅ Found: {requiredProduct}");
+            }
+        }
+
+        Debug.Log($"✅ Player {playerNumber} has all required products!");
+        return true;
+    }
+
+    public void ShowVerificationResult(int playerNumber, bool success)
+    {
+        GameObject panel = playerNumber == 1 ? verificationPanelRight : verificationPanelLeft;
+        Text verificationText = playerNumber == 1 ? verificationTextRight : verificationTextLeft;
+
+        if (panel == null || verificationText == null)
+        {
+            Debug.LogWarning("⚠️ Verification panel or text not assigned!");
+            return;
+        }
+
+        string message;
+        Color color;
+
+        if (success)
+        {
+            message = successMessage;
+            color = successColor;
+            PlaySound(verificationSuccessSound);
+            Debug.Log($"✅ Player {playerNumber} VERIFICATION SUCCESS!");
+        }
+        else
+        {
+            // إنشاء رسالة مفصلة بالمنتجات الناقصة
+            message = failMessage + "\n";
+            foreach (string product in requiredProducts)
+            {
+                message += $"\n• {product}";
+            }
+            color = failColor;
+            PlaySound(verificationFailSound);
+            Debug.Log($"❌ Player {playerNumber} VERIFICATION FAILED!");
+        }
+
+        verificationText.text = message;
+        verificationText.color = color;
+        panel.SetActive(true);
+
+        Debug.Log($"📋 Verification panel shown for Player {playerNumber}");
+    }
+
+    void CloseVerificationPanel(int playerNumber)
+    {
+        GameObject panel = playerNumber == 1 ? verificationPanelRight : verificationPanelLeft;
+
+        if (panel != null)
+        {
+            panel.SetActive(false);
+            Debug.Log($"📋 Verification panel closed for Player {playerNumber}");
+        }
     }
 
     // ========== Budget Management ==========
@@ -251,7 +403,7 @@ public class ShopSystem : MonoBehaviour
                 player1Camera = playerID.playerCamera;
                 if(player1Camera!=null)
                 Debug.Log($"We Found Player 1 camera{player1Camera.name}");
-                // إظهار UI للاعب 1
+                
                 ShowButton(invoiceButtonRight);
                 ShowPanel(budgetPanelRight);
                 ShowPanel(welcomePanelRight);
@@ -270,7 +422,6 @@ public class ShopSystem : MonoBehaviour
                 player2Inside = true;
                 player2Camera = playerID.GetComponentInChildren<Camera>();
 
-                // إظهار UI للاعب 2
                 ShowButton(invoiceButtonLeft);
                 ShowPanel(budgetPanelLeft);
                 ShowPanel(welcomePanelLeft);
@@ -300,11 +451,11 @@ public class ShopSystem : MonoBehaviour
                 player1 = null;
                 player1Camera = null;
 
-                // إخفاء UI للاعب 1
                 HideButton(invoiceButtonRight);
                 HidePanel(budgetPanelRight);
                 HidePanel(welcomePanelRight);
                 CloseInvoice(1);
+                CloseVerificationPanel(1);
 
                 Debug.Log("🚶 Player 1 left shop");
             }
@@ -314,16 +465,15 @@ public class ShopSystem : MonoBehaviour
                 player2 = null;
                 player2Camera = null;
 
-                // إخفاء UI للاعب 2
                 HideButton(invoiceButtonLeft);
                 HidePanel(budgetPanelLeft);
                 HidePanel(welcomePanelLeft);
                 CloseInvoice(2);
+                CloseVerificationPanel(2);
 
                 Debug.Log("🚶 Player 2 left shop");
             }
 
-            // إرجاع الماوس إذا كلا اللاعبين خارج المحل
             if (!player1Inside && !player2Inside)
             {
                 Cursor.visible = false;
@@ -371,6 +521,8 @@ public class ShopSystem : MonoBehaviour
             items.Add(newItem);
             Debug.Log($"✅ Player {playerNumber}: Added {item.itemName} - {item.price} SAR");
         }
+
+        PlaySound(addItemSound);
 
         item.gameObject.SetActive(false);
         
@@ -436,6 +588,9 @@ public class ShopSystem : MonoBehaviour
         if (!CanAfford(playerNumber, total))
         {
             Debug.Log($"❌ Player {playerNumber} cannot checkout!");
+            if (insufficientFundsSound != null)
+                PlaySound(insufficientFundsSound);
+            
             StartCoroutine(ShowInsufficientFundsMessage(playerNumber));
             return;
         }
@@ -443,6 +598,8 @@ public class ShopSystem : MonoBehaviour
         if (SpendMoney(playerNumber, total))
         {
             List<PurchaseItem> items = playerNumber == 1 ? player1Items : player2Items;
+
+            PlaySound(checkoutSound);
 
             Debug.Log($"💰 Player {playerNumber} checkout successful: {total} SAR");
             
@@ -455,7 +612,24 @@ public class ShopSystem : MonoBehaviour
             UpdateUI(playerNumber);
             CloseInvoice(playerNumber);
         }
-    }
+    }// ========== Public Getters for SceneTrigger ==========
+
+public List<PurchaseItem> GetPlayerItems(int playerNumber)
+{
+    if (playerNumber == 1)
+        return new List<PurchaseItem>(player1Items); // نسخة من القائمة
+    else if (playerNumber == 2)
+        return new List<PurchaseItem>(player2Items); // نسخة من القائمة
+    
+    Debug.LogWarning($"⚠️ Invalid player number: {playerNumber}");
+    return new List<PurchaseItem>(); // قائمة فاضية
+}
+
+public List<string> GetPlayerItemNames(int playerNumber)
+{
+    List<PurchaseItem> items = GetPlayerItems(playerNumber);
+    return items.Select(item => item.itemName).ToList();
+}
 
     IEnumerator ShowInsufficientFundsMessage(int playerNumber)
     {
@@ -524,6 +698,21 @@ public class ShopSystem : MonoBehaviour
 
         panel.SetActive(true);
         UpdateUI(playerNumber);
+
+        // 🎯 التحقق من المنتجات في أول مرة فقط
+        bool alreadyVerified = playerNumber == 1 ? player1Verified : player2Verified;
+        
+        if (!alreadyVerified && requiredProducts != null && requiredProducts.Count > 0)
+        {
+            bool hasAllProducts = CheckPlayerProducts(playerNumber);
+            ShowVerificationResult(playerNumber, hasAllProducts);
+            
+            // تعليم إنه تم التحقق
+            if (playerNumber == 1)
+                player1Verified = true;
+            else
+                player2Verified = true;
+        }
         
         Debug.Log($"📋 Player {playerNumber} invoice opened");
     }
@@ -582,7 +771,7 @@ public class ShopSystem : MonoBehaviour
             button.gameObject.SetActive(false);
     }
 
-    // ========== HUD (Optional - يمكن تعطيله إذا تبي) ==========
+    // ========== HUD ==========
 
     void OnGUI()
     {
@@ -591,7 +780,6 @@ public class ShopSystem : MonoBehaviour
         style.normal.textColor = Color.white;
         style.fontStyle = FontStyle.Bold;
 
-        // Player 1 HUD
         if (player1LookingAt != null && !player1InvoiceOpen && player1Inside)
         {
             GUI.Label(new Rect(10, 10, 400, 30),
@@ -600,7 +788,6 @@ public class ShopSystem : MonoBehaviour
                 $"[{addKey}] Add to Invoice", style);
         }
 
-        // Player 2 HUD
         if (player2LookingAt != null && !player2InvoiceOpen && player2Inside)
         {
             GUI.Label(new Rect(Screen.width - 410, 10, 400, 30),

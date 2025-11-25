@@ -8,6 +8,7 @@ public class DeliveryManager : MonoBehaviour
     public event EventHandler OnRecipeCompleted;
     public event EventHandler OnRecipeSuccess;
     public event EventHandler OnRecipeFailed;
+    public GameObject DelivaryUI;
 
     public static DeliveryManager Instance { get; private set; }
     [SerializeField] private RecipeListSO recipeListSO;
@@ -75,7 +76,12 @@ public class DeliveryManager : MonoBehaviour
                     Debug.Log("Player delivered the correct recipe: " + waitingRecipeSO.recipeName);
                     waitingRecipeSOList.RemoveAt(i);
 
-                    // áÇ äÏãÑ ÇáÕÍä åäÇ - íÈŞì ãÚ ÇááÇÚÈ
+                    // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ - ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+                     
+if (successfulRecipesDelivered == 2)
+{
+    DelivaryUI.SetActive(false);
+} 
                     successfulRecipesDelivered++;
                     OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
                     OnRecipeCompleted?.Invoke(this, EventArgs.Empty);
@@ -87,7 +93,7 @@ public class DeliveryManager : MonoBehaviour
         // No matching recipe found
         Debug.Log("Plate does not match any waiting recipe.");
 
-        // äÏãÑ ÇáÕÍä İŞØ ÅĞÇ ßÇäÊ ÇáæÕİÉ ÛíÑ ÕÍíÍÉ
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
         plateKitchenObject.DestroySelf();
 
         OnRecipeFailed?.Invoke(this, EventArgs.Empty);

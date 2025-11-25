@@ -1,184 +1,231 @@
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
-public class MessageTrigger : MonoBehaviour
+public class SceneTrigger : MonoBehaviour
 {
-    [Header("Message Settings")]
+    [Header("Required Products")]
+    [Tooltip("أسماء المنتجات المطلوبة (يجب أن تتطابق مع أسماء ShopItem)")]
+    public List<string> requiredProducts = new List<string>(); // قائمة المنتجات المطلوبة
+     [Header("Success Message")]
     [TextArea(3, 5)]
-    public string messageText = "مرحباً! هذه رسالة تجريبية"; // نص الرسالة
-    public float messageDuration = 15f; // مدة عرض الرسالة بالثواني
+    public string successMessage = "✅ Well done! You have all the products you need!";
+    [TextArea(3, 5)]
+    public string failMessage = "❌ Sorry! You do not have all the requested products";
+
+    public float messageDuration = 3f;
     
     [Header("UI References")]
-    public GameObject messagePanelRight; // Panel for Player1
-    public GameObject messagePanelLeft; // Panel for Player2
-    public Text messageTextUIRight; // Text for Player1 panel
-    public Text messageTextUILeft; // Text for Player2 panel
-    public Button skipButtonRight; // زر التخطي للـ Player1
-    public Button skipButtonLeft; // زر التخطي للـ Player2
+    public GameObject messagePanelRight; // للاعب 1
+    public GameObject messagePanelLeft; // للاعب 2
+    public Text messageTextRight; // نص الرسالة للاعب 1
+    public Text messageTextLeft; // نص الرسالة للاعب 2
     
-    [Header("Cursor Settings")]
-    public bool showCursorWhenMessageActive = true; // إظهار الماوس مع الرسالة
+    [Header("Success Action")]
+    public bool teleportOnSuccess = false; // نقل اللاعب عند النجاح
+    public Transform teleportDestination; // نقطة النقل
+    public GameObject objectToActivate; // كائن يتم تفعيله عند النجاح
+    public GameObject objectToDeactivate; // كائن يتم إخفاؤه عند النجاح
     
-    private bool hasTriggered = false; // عشان ما تتكرر الرسالة
-    private Coroutine hideCoroutine;
-    private GameObject activePanel; // Track which panel is currently active
+    [Header("Audio")]
+    public AudioClip successSound;
+    public AudioClip failSound;
     
-    // حفظ حالة الماوس الأصلية
-    private bool originalCursorVisible;
-    private CursorLockMode originalCursorLockMode;
+    [Header("Colors")]
+    public Color successColor = Color.green;
+    public Color failColor = Color.red;
+    
+    private ShopSystem shopSystem;
+    private AudioSource audioSource;
+    private bool hasTriggered = false;
 
-    private void Start()
+    private bool isFirstTime;
+    
+    void Start()
     {
-        // تأكد إن الـ Panels مخفية في البداية
-        if (messagePanelRight != null)
+        // البحث عن ShopSystem في المشهد
+        shopSystem = FindObjectOfType<ShopSystem>();
+        
+        if (shopSystem == null)
         {
-            messagePanelRight.SetActive(false);
+            Debug.LogError("⚠️ ShopSystem not found in scene!");
         }
+        
+        // إضافة AudioSource
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        
+        // إخفاء الرسائل في البداية
+        if (messagePanelRight != null)
+            messagePanelRight.SetActive(false);
         
         if (messagePanelLeft != null)
-        {
             messagePanelLeft.SetActive(false);
-        }
-
-        // Setup skip button listeners - طريقة محسّنة
-        if (skipButtonRight != null)
-        {
-            skipButtonRight.onClick.RemoveAllListeners(); // مسح أي listeners قديمة
-            skipButtonRight.onClick.AddListener(() => OnSkipButtonClicked(messagePanelRight));
-            Debug.Log("✅ Skip button Right listener added");
-        }
-        
-        if (skipButtonLeft != null)
-        {
-            skipButtonLeft.onClick.RemoveAllListeners(); // مسح أي listeners قديمة
-            skipButtonLeft.onClick.AddListener(() => OnSkipButtonClicked(messagePanelLeft));
-            Debug.Log("✅ Skip button Left listener added");
-        }
+            
+        Debug.Log($"✅ SceneTrigger initialized - Required products: {requiredProducts.Count}");
     }
-
-    private void OnTriggerEnter(Collider other)
+    
+    void OnTriggerEnter(Collider other)
     {
-        if (hasTriggered) return;
-
         if (other.CompareTag("Player"))
         {
-            // Try to get PlayerID component
             PlayerID playerID = other.GetComponent<PlayerID>();
             
-            if (playerID != null)
+            if (playerID == null)
             {
-                if (playerID.playerNumber == 1)
-                {
-                    ShowMessage(messagePanelRight, messageTextUIRight, "Player1");
-                    hasTriggered = true;
-                }
-                else if (playerID.playerNumber == 2)
-                {
-                    ShowMessage(messagePanelLeft, messageTextUILeft, "Player2");
-                    hasTriggered = true;
-                }
-                else
-                {
-                    Debug.LogWarning("⚠️ PlayerID component found but playerNumber is not 1 or 2. Value: " + playerID.playerNumber);
-                }
+                Debug.LogWarning("⚠️ Player detected but no PlayerID component!");
+                return;
+            }
+            
+            // التحقق من المنتجات
+            bool hasAllProducts = CheckPlayerProducts(playerID.playerNumber);
+            if (isFirstTime == false)
+            {
+                messagePanelLeft.gameObject.SetActive(true);
+                isFirstTime = true;
+            }
+            else if (hasAllProducts)
+            {
+                OnSuccess(playerID);
+                shopSystem.ShowVerificationResult(playerID.playerNumber, true);
             }
             else
             {
-                Debug.LogError("⚠️ Player detected but no PlayerID component found!");
+                OnFail(playerID);
+                shopSystem.ShowVerificationResult(playerID.playerNumber, false);
             }
         }
     }
-
-    void ShowMessage(GameObject panel, Text textUI, string playerName)
+    
+    bool CheckPlayerProducts(int playerNumber)
     {
-        if (panel == null || textUI == null)
+        if (shopSystem == null || requiredProducts.Count == 0)
         {
-            Debug.LogError("⚠️ Panel or Text reference is missing!");
-            return;
+            Debug.LogWarning("⚠️ ShopSystem is null or no required products set!");
+            return false;
         }
-
-        Debug.Log($"📢 Showing message for {playerName}: {messageText}");
-
-        // حفظ حالة الماوس الحالية
-        originalCursorVisible = Cursor.visible;
-        originalCursorLockMode = Cursor.lockState;
-
-        // إظهار الماوس وفك القفل
-        if (showCursorWhenMessageActive)
+        
+        // الحصول على قائمة المشتريات من ShopSystem
+        List<PurchaseItem> playerItems = playerNumber == 1 
+            ? GetPlayer1Items() 
+            : GetPlayer2Items();
+        
+        if (playerItems == null || playerItems.Count == 0)
         {
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
-            Debug.Log("🖱️ Cursor enabled");
+            Debug.Log($"❌ Player {playerNumber} has no purchased items");
+            return false;
         }
-
-        // Display the message
-        textUI.text = messageText;
-        panel.SetActive(true);
-        activePanel = panel;
-
-        // Stop any existing hide coroutine
-        if (hideCoroutine != null)
+        
+        Debug.Log($"🔍 Checking Player {playerNumber} purchases:");
+        
+        // التحقق من كل منتج مطلوب
+        foreach (string requiredProduct in requiredProducts)
         {
-            StopCoroutine(hideCoroutine);
+            bool found = playerItems.Any(item => item.itemName == requiredProduct);
+            
+            if (!found)
+            {
+                Debug.Log($"❌ Missing product: {requiredProduct}");
+                return false;
+            }
+            else
+            {
+                Debug.Log($"✅ Found product: {requiredProduct}");
+            }
         }
-
-        // Hide the message after the specified duration
-        hideCoroutine = StartCoroutine(HideMessageAfterDelay(panel));
+        
+        Debug.Log($"✅ Player {playerNumber} has all required products!");
+        return true;
     }
-
-    IEnumerator HideMessageAfterDelay(GameObject panel)
+    
+    // دوال مساعدة للوصول لقوائم المشتريات (نحتاج نعدل ShopSystem)
+    List<PurchaseItem> GetPlayer1Items()
+    {
+        // هذه الدالة تحتاج public getter في ShopSystem
+        return shopSystem.GetPlayerItems(1);
+    }
+    
+    List<PurchaseItem> GetPlayer2Items()
+    {
+        return shopSystem.GetPlayerItems(2);
+    }
+    
+    void OnSuccess(PlayerID player)
+    {
+        Debug.Log($"🎉 Player {player.playerNumber} SUCCESS!");
+        
+        // تشغيل صوت النجاح
+        if (successSound != null && audioSource != null)
+            audioSource.PlayOneShot(successSound);
+        
+        // عرض رسالة النجاح
+        GameObject panel = player.playerNumber == 1 ? messagePanelRight : messagePanelLeft;
+        Text messageText = player.playerNumber == 1 ? messageTextRight : messageTextLeft;
+        
+        ShowMessage(panel, messageText, successMessage, successColor);
+        
+        // تنفيذ إجراءات النجاح
+        if (teleportOnSuccess && teleportDestination != null)
+        {
+            player.transform.position = teleportDestination.position;
+            Debug.Log($"📍 Player {player.playerNumber} teleported!");
+        }
+        
+        if (objectToActivate != null)
+        {
+            objectToActivate.SetActive(true);
+            Debug.Log("✅ Object activated");
+        }
+        
+        if (objectToDeactivate != null)
+        {
+            objectToDeactivate.SetActive(false);
+            Debug.Log("❌ Object deactivated");
+        }
+        
+        hasTriggered = true;
+    }
+    
+    void OnFail(PlayerID player)
+    {
+        Debug.Log($"❌ Player {player.playerNumber} FAILED - Missing products");
+        
+        // تشغيل صوت الفشل
+        if (failSound != null && audioSource != null)
+            audioSource.PlayOneShot(failSound);
+        
+        // عرض رسالة الفشل
+        GameObject panel = player.playerNumber == 2 ? messagePanelRight : messagePanelLeft;
+        Text messageText = player.playerNumber == 2 ? messageTextRight : messageTextLeft;
+        
+        // إضافة قائمة المنتجات المفقودة
+        string detailedMessage = failMessage + "\n\nالمنتجات المطلوبة:\n";
+        foreach (string product in requiredProducts)
+        {
+            detailedMessage += $"• {product}\n";
+        }
+        
+        ShowMessage(panel, messageText, detailedMessage, failColor);
+    }
+    
+    void ShowMessage(GameObject panel, Text textUI, string message, Color color)
+    {
+        if (panel == null || textUI == null) return;
+        
+        textUI.text = message;
+        textUI.color = color;
+        panel.SetActive(true);
+        
+        // إخفاء الرسالة بعد مدة
+        StartCoroutine(HideMessageAfterDelay(panel));
+    }
+    
+    System.Collections.IEnumerator HideMessageAfterDelay(GameObject panel)
     {
         yield return new WaitForSeconds(messageDuration);
-        Debug.Log("🔙 Hiding message (auto)");
-        HideMessage(panel);
-    }
-
-    // دالة جديدة للضغط على الزر
-    void OnSkipButtonClicked(GameObject panel)
-    {
-        Debug.Log("🔘 Skip button clicked!");
-        HideMessage(panel);
-    }
-
-    void HideMessage(GameObject panel)
-    {
-        Debug.Log("🔙 Hiding message");
         
         if (panel != null)
-        {
             panel.SetActive(false);
-        }
-
-        // إرجاع حالة الماوس للوضع الأصلي
-        if (showCursorWhenMessageActive)
-        {
-            Cursor.visible = originalCursorVisible;
-            Cursor.lockState = originalCursorLockMode;
-            Debug.Log("🖱️ Cursor restored to original state");
-        }
-
-        // Stop the hide coroutine if it's running
-        if (hideCoroutine != null)
-        {
-            StopCoroutine(hideCoroutine);
-            hideCoroutine = null;
-        }
-
-        // Uncomment the line below if you want the trigger to work again
-        // hasTriggered = false;
-    }
-
-    // إضافة: إخفاء الرسالة عند الخروج من الـ Trigger (اختياري)
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            if (activePanel != null && activePanel.activeSelf)
-            {
-                Debug.Log("🚶 Player left trigger zone, hiding message");
-                HideMessage(activePanel);
-            }
-        }
     }
 }
