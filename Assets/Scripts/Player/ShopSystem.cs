@@ -2,38 +2,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Linq;
 
 public class ShopSystem : MonoBehaviour
 {
     [Header("=== Welcome Panels ===")]
-    public GameObject welcomePanelRight;
-    public GameObject welcomePanelLeft;
+    public GameObject welcomePanelRight; // Player 1
+    public GameObject welcomePanelLeft; // Player 2
     public float welcomeDisplayTime = 4f;
 
     [Header("=== Invoice Panels ===")]
-    public GameObject invoicePanelRight;
-    public GameObject invoicePanelLeft;
-    public Transform itemsContentRight;
-    public Transform itemsContentLeft;
-    public Text totalPriceTextRight;
-    public Text totalPriceTextLeft;
+    public GameObject invoicePanelRight; // Player 1
+    public GameObject invoicePanelLeft; // Player 2
+    public Transform itemsContentRight; // Player 1 invoice content
+    public Transform itemsContentLeft; // Player 2 invoice content
+    public Text totalPriceTextRight; // Player 1 total
+    public Text totalPriceTextLeft; // Player 2 total
 
     [Header("=== Invoice Buttons ===")]
-    public Button invoiceButtonRight;
-    public Button invoiceButtonLeft;
-    public Button checkoutButtonRight;
-    public Button checkoutButtonLeft;
-    public Button closeButtonRight;
-    public Button closeButtonLeft;
+    public Button invoiceButtonRight; // Player 1 invoice button
+    public Button invoiceButtonLeft; // Player 2 invoice button
+    public Button checkoutButtonRight; // Player 1 checkout button
+    public Button checkoutButtonLeft; // Player 2 checkout button
+    public Button closeButtonRight; // Player 1 close button
+    public Button closeButtonLeft; // Player 2 close button
 
     [Header("=== Budget Panels ===")]
-    public GameObject budgetPanelRight;
-    public GameObject budgetPanelLeft;
-    public Text budgetTextRight;
-    public Text budgetTextLeft;
-    public Image moneyIconRight;
-    public Image moneyIconLeft;
+    public GameObject budgetPanelRight; // Player 1
+    public GameObject budgetPanelLeft; // Player 2
+    public Text budgetTextRight; // Player 1 budget text
+    public Text budgetTextLeft; // Player 2 budget text
+    public Image moneyIconRight; // Player 1 money icon
+    public Image moneyIconLeft; // Player 2 money icon
     
     [Header("=== Player Budgets ===")]
     public float player1Budget = 100f;
@@ -63,51 +62,27 @@ public class ShopSystem : MonoBehaviour
     public AudioClip insufficientFundsSound;
     [Range(0f, 1f)]
     public float soundVolume = 0.7f;
+
+    [Header("=== Validation ===")]
+    public ProductValidator validator;
     
     private AudioSource audioSource;
 
-    [Header("=== Product Verification ===")]
-    [Tooltip("قائمة المنتجات المطلوبة للتحقق")]
-    public List<string> requiredProducts = new List<string>();
-    
-    [Header("=== Verification Panels ===")]
-    public GameObject verificationPanelRight; // بانل التحقق للاعب 1
-    public GameObject verificationPanelLeft; // بانل التحقق للاعب 2
-    public Text verificationTextRight; // نص التحقق للاعب 1
-    public Text verificationTextLeft; // نص التحقق للاعب 2
-    public Button verificationCloseButtonRight; // زر إغلاق التحقق للاعب 1
-    public Button verificationCloseButtonLeft; // زر إغلاق التحقق للاعب 2
-    
-    [Header("=== Verification Messages ===")]
-    [TextArea(3, 5)]
-    public string successMessage = "✅ Well done! You have all the products you need!";
-    [TextArea(3, 5)]
-    public string failMessage = "❌ Sorry! You do not have all the requested products";
-    
-    [Header("=== Verification Colors ===")]
-    public Color successColor = Color.green;
-    public Color failColor = Color.red;
-    
-    [Header("=== Verification Audio ===")]
-    public AudioClip verificationSuccessSound;
-    public AudioClip verificationFailSound;
-
-    // Player data
+    // Player 1 data
     private List<PurchaseItem> player1Items = new List<PurchaseItem>();
     private ShopItem player1LookingAt;
     private bool player1InvoiceOpen = false;
     private bool player1Inside = false;
     private PlayerID player1;
     private Camera player1Camera;
-    private bool player1Verified = false; // تحقق مرة واحدة فقط
 
+    // Player 2 data
     private List<PurchaseItem> player2Items = new List<PurchaseItem>();
     private ShopItem player2LookingAt;
     private bool player2InvoiceOpen = false;
     private bool player2Inside = false;
     private PlayerID player2;
     private Camera player2Camera;
-    private bool player2Verified = false; // تحقق مرة واحدة فقط
 
     void Start()
     {
@@ -115,51 +90,38 @@ public class ShopSystem : MonoBehaviour
         audioSource.playOnAwake = false;
         audioSource.volume = soundVolume;
 
-        // إخفاء كل الـ Panels
         HidePanel(welcomePanelRight);
         HidePanel(welcomePanelLeft);
         HidePanel(invoicePanelRight);
         HidePanel(invoicePanelLeft);
         HidePanel(budgetPanelRight);
         HidePanel(budgetPanelLeft);
-        HidePanel(verificationPanelRight);
-        HidePanel(verificationPanelLeft);
 
         HideButton(invoiceButtonRight);
         HideButton(invoiceButtonLeft);
 
-        // ربط أزرار الفواتير
         if (invoiceButtonRight != null)
             invoiceButtonRight.onClick.AddListener(() => OpenInvoice(1));
         
         if (invoiceButtonLeft != null)
             invoiceButtonLeft.onClick.AddListener(() => OpenInvoice(2));
 
-        // ربط أزرار الدفع
         if (checkoutButtonRight != null)
             checkoutButtonRight.onClick.AddListener(() => Checkout(1));
         
         if (checkoutButtonLeft != null)
             checkoutButtonLeft.onClick.AddListener(() => Checkout(2));
 
-        // ربط أزرار الإغلاق
         if (closeButtonRight != null)
             closeButtonRight.onClick.AddListener(() => CloseInvoice(1));
         
         if (closeButtonLeft != null)
             closeButtonLeft.onClick.AddListener(() => CloseInvoice(2));
 
-        // ربط أزرار إغلاق التحقق
-        if (verificationCloseButtonRight != null)
-            verificationCloseButtonRight.onClick.AddListener(() => CloseVerificationPanel(1));
-        
-        if (verificationCloseButtonLeft != null)
-            verificationCloseButtonLeft.onClick.AddListener(() => CloseVerificationPanel(2));
-
         UpdateBudgetDisplay(1);
         UpdateBudgetDisplay(2);
 
-        Debug.Log("✅ ShopSystem initialized with Product Verification");
+        Debug.Log("✅ ShopSystem initialized for 2 players with Audio Support");
     }
 
     void Update()
@@ -169,12 +131,13 @@ public class ShopSystem : MonoBehaviour
         {
             UpdateLookingAt(1);
 
-            if (Input.GetKeyDown(addKey) && player1LookingAt != null)
+            // Support keyboard and controller input
+            if (GetAddItemInput() && player1LookingAt != null)
             {
                 AddItem(1, player1LookingAt);
             }
 
-            if (Input.GetKeyDown(toggleKey))
+            if (GetToggleInput())
             {
                 if (player1InvoiceOpen)
                     CloseInvoice(1);
@@ -188,12 +151,13 @@ public class ShopSystem : MonoBehaviour
         {
             UpdateLookingAt(2);
 
-            if (Input.GetKeyDown(addKey) && player2LookingAt != null)
+            // Support keyboard and controller input
+            if (GetAddItemInput() && player2LookingAt != null)
             {
                 AddItem(2, player2LookingAt);
             }
 
-            if (Input.GetKeyDown(toggleKey))
+            if (GetToggleInput())
             {
                 if (player2InvoiceOpen)
                     CloseInvoice(2);
@@ -201,6 +165,35 @@ public class ShopSystem : MonoBehaviour
                     OpenInvoice(2);
             }
         }
+    }
+
+    // ========== Input Helper Methods ==========
+
+    /// <summary>
+    /// Check if add item button is pressed (Keyboard or Controller)
+    /// </summary>
+    bool GetAddItemInput()
+    {
+        return Input.GetKeyDown(addKey) || 
+               IsPS4CirclePressed() || 
+               Input.GetKeyDown(KeyCode.JoystickButton3);
+    }
+
+    /// <summary>
+    /// Check if toggle invoice button is pressed
+    /// </summary>
+    bool GetToggleInput()
+    {
+        return Input.GetKeyDown(toggleKey);
+    }
+
+    /// <summary>
+    /// Check if PS4 Circle button is pressed
+    /// </summary>
+    bool IsPS4CirclePressed()
+    {
+        // PS4 Circle button is typically Button1
+        return Input.GetKeyDown(KeyCode.JoystickButton1);
     }
 
     void UpdateLookingAt(int playerNumber)
@@ -237,99 +230,6 @@ public class ShopSystem : MonoBehaviour
         if (clip != null && audioSource != null)
         {
             audioSource.PlayOneShot(clip, soundVolume);
-        }
-    }
-
-    // ========== Product Verification ==========
-    
-    bool CheckPlayerProducts(int playerNumber)
-    {
-        // إذا ما فيه منتجات مطلوبة، ارجع true
-        if (requiredProducts == null || requiredProducts.Count == 0)
-        {
-            Debug.Log("⚠️ No required products set!");
-            return true;
-        }
-
-        List<PurchaseItem> playerItems = playerNumber == 1 ? player1Items : player2Items;
-
-        if (playerItems == null || playerItems.Count == 0)
-        {
-            Debug.Log($"❌ Player {playerNumber} has no items in invoice");
-            return false;
-        }
-
-        Debug.Log($"🔍 Checking Player {playerNumber} products:");
-
-        // التحقق من كل منتج مطلوب
-        foreach (string requiredProduct in requiredProducts)
-        {
-            bool found = playerItems.Any(item => item.itemName.Trim().ToLower() == requiredProduct.Trim().ToLower());
-
-            if (!found)
-            {
-                Debug.Log($"❌ Missing: {requiredProduct}");
-                return false;
-            }
-            else
-            {
-                Debug.Log($"✅ Found: {requiredProduct}");
-            }
-        }
-
-        Debug.Log($"✅ Player {playerNumber} has all required products!");
-        return true;
-    }
-
-    public void ShowVerificationResult(int playerNumber, bool success)
-    {
-        GameObject panel = playerNumber == 1 ? verificationPanelRight : verificationPanelLeft;
-        Text verificationText = playerNumber == 1 ? verificationTextRight : verificationTextLeft;
-
-        if (panel == null || verificationText == null)
-        {
-            Debug.LogWarning("⚠️ Verification panel or text not assigned!");
-            return;
-        }
-
-        string message;
-        Color color;
-
-        if (success)
-        {
-            message = successMessage;
-            color = successColor;
-            PlaySound(verificationSuccessSound);
-            Debug.Log($"✅ Player {playerNumber} VERIFICATION SUCCESS!");
-        }
-        else
-        {
-            // إنشاء رسالة مفصلة بالمنتجات الناقصة
-            message = failMessage + "\n";
-            foreach (string product in requiredProducts)
-            {
-                message += $"\n• {product}";
-            }
-            color = failColor;
-            PlaySound(verificationFailSound);
-            Debug.Log($"❌ Player {playerNumber} VERIFICATION FAILED!");
-        }
-
-        verificationText.text = message;
-        verificationText.color = color;
-        panel.SetActive(true);
-
-        Debug.Log($"📋 Verification panel shown for Player {playerNumber}");
-    }
-
-    void CloseVerificationPanel(int playerNumber)
-    {
-        GameObject panel = playerNumber == 1 ? verificationPanelRight : verificationPanelLeft;
-
-        if (panel != null)
-        {
-            panel.SetActive(false);
-            Debug.Log($"📋 Verification panel closed for Player {playerNumber}");
         }
     }
 
@@ -455,7 +355,6 @@ public class ShopSystem : MonoBehaviour
                 HidePanel(budgetPanelRight);
                 HidePanel(welcomePanelRight);
                 CloseInvoice(1);
-                CloseVerificationPanel(1);
 
                 Debug.Log("🚶 Player 1 left shop");
             }
@@ -469,7 +368,6 @@ public class ShopSystem : MonoBehaviour
                 HidePanel(budgetPanelLeft);
                 HidePanel(welcomePanelLeft);
                 CloseInvoice(2);
-                CloseVerificationPanel(2);
 
                 Debug.Log("🚶 Player 2 left shop");
             }
@@ -513,6 +411,7 @@ public class ShopSystem : MonoBehaviour
             PurchaseItem newItem = new PurchaseItem
             {
                 itemName = item.itemName,
+                objectName = item.gameObject.name,
                 price = item.price,
                 quantity = 1,
                 icon = item.itemIcon,
@@ -581,13 +480,37 @@ public class ShopSystem : MonoBehaviour
         UpdateBudgetDisplay(playerNumber);
     }
 
+    // ========== Checkout with Validation ==========
+
     void Checkout(int playerNumber)
     {
+        // ========== STEP 1: Validate Items First ==========
+        if (validator != null)
+        {
+            ValidationResult validationResult = validator.ValidateInvoiceDetailed(playerNumber);
+            
+            if (!validationResult.isValid)
+            {
+                Debug.Log($"❌ Player {playerNumber} checkout REJECTED! Invalid items found.");
+                
+                if (insufficientFundsSound != null)
+                    PlaySound(insufficientFundsSound);
+                
+                ShowCheckoutResultPanel(playerNumber, false, validationResult);
+                
+                return;
+            }
+            
+            Debug.Log($"✅ Player {playerNumber} items validated successfully!");
+        }
+        
+        // ========== STEP 2: Check Budget ==========
         float total = GetTotal(playerNumber);
         
         if (!CanAfford(playerNumber, total))
         {
             Debug.Log($"❌ Player {playerNumber} cannot checkout!");
+            
             if (insufficientFundsSound != null)
                 PlaySound(insufficientFundsSound);
             
@@ -595,6 +518,7 @@ public class ShopSystem : MonoBehaviour
             return;
         }
         
+        // ========== STEP 3: Process Payment ==========
         if (SpendMoney(playerNumber, total))
         {
             List<PurchaseItem> items = playerNumber == 1 ? player1Items : player2Items;
@@ -608,28 +532,72 @@ public class ShopSystem : MonoBehaviour
                 Debug.Log($"  - {item.itemName} x{item.quantity} = {item.GetTotal()} SAR");
             }
 
+            // ========== STEP 4: Show Success Panel ==========
+            if (validator != null)
+            {
+                ValidationResult successResult = new ValidationResult
+                {
+                    isValid = true,
+                    validCount = items.Count,
+                    validItems = items.ConvertAll(i => i.itemName)
+                };
+                
+                ShowCheckoutResultPanel(playerNumber, true, successResult);
+            }
+
             items.Clear();
             UpdateUI(playerNumber);
             CloseInvoice(playerNumber);
         }
-    }// ========== Public Getters for SceneTrigger ==========
+    }
 
-public List<PurchaseItem> GetPlayerItems(int playerNumber)
-{
-    if (playerNumber == 1)
-        return new List<PurchaseItem>(player1Items); // نسخة من القائمة
-    else if (playerNumber == 2)
-        return new List<PurchaseItem>(player2Items); // نسخة من القائمة
-    
-    Debug.LogWarning($"⚠️ Invalid player number: {playerNumber}");
-    return new List<PurchaseItem>(); // قائمة فاضية
-}
+    // ========== Show Checkout Result Panel ==========
+    // Player 1 = LEFT Panel, Player 2 = RIGHT Panel
 
-public List<string> GetPlayerItemNames(int playerNumber)
-{
-    List<PurchaseItem> items = GetPlayerItems(playerNumber);
-    return items.Select(item => item.itemName).ToList();
-}
+    void ShowCheckoutResultPanel(int playerNumber, bool success, ValidationResult result)
+    {
+        if (validator != null)
+        {
+            if (success)
+            {
+                string message = "✅ Payment completed successfully!\n\n";
+                message += $"Order list is complete! ({result.validCount} items)\n\n";
+                
+                foreach (string itemName in result.validItems)
+                {
+                    message += $"✓ {itemName}\n";
+                }
+                
+                validator.ShowValidationMessage(playerNumber, true, "Payment Successful", message);
+            }
+            else
+            {
+                string message = "❌ Payment rejected!\n\n";
+                message += $"Order list is incomplete ({result.invalidCount} issues)\n\n";
+                
+                foreach (string itemName in result.invalidItems)
+                {
+                    message += $"✗ {itemName}\n";
+                }
+                
+                if (result.validCount > 0)
+                {
+                    message += $"\n✅ Valid products ({result.validCount}):\n";
+                    foreach (string itemName in result.validItems)
+                    {
+                        message += $"✓ {itemName}\n";
+                    }
+                }
+                
+                validator.ShowValidationMessage(playerNumber, false, "Payment Failed", message);
+            }
+        }
+    }
+
+    public List<PurchaseItem> GetPlayerItems(int playerNumber)
+    {
+        return playerNumber == 1 ? player1Items : player2Items;
+    }
 
     IEnumerator ShowInsufficientFundsMessage(int playerNumber)
     {
@@ -698,21 +666,6 @@ public List<string> GetPlayerItemNames(int playerNumber)
 
         panel.SetActive(true);
         UpdateUI(playerNumber);
-
-        // 🎯 التحقق من المنتجات في أول مرة فقط
-        bool alreadyVerified = playerNumber == 1 ? player1Verified : player2Verified;
-        
-        if (!alreadyVerified && requiredProducts != null && requiredProducts.Count > 0)
-        {
-            bool hasAllProducts = CheckPlayerProducts(playerNumber);
-            ShowVerificationResult(playerNumber, hasAllProducts);
-            
-            // تعليم إنه تم التحقق
-            if (playerNumber == 1)
-                player1Verified = true;
-            else
-                player2Verified = true;
-        }
         
         Debug.Log($"📋 Player {playerNumber} invoice opened");
     }
@@ -780,20 +733,22 @@ public List<string> GetPlayerItemNames(int playerNumber)
         style.normal.textColor = Color.white;
         style.fontStyle = FontStyle.Bold;
 
+        // Player 1 HUD
         if (player1LookingAt != null && !player1InvoiceOpen && player1Inside)
         {
             GUI.Label(new Rect(10, 10, 400, 30),
                 $"👀 P1: {player1LookingAt.itemName} - {player1LookingAt.price} SAR", style);
             GUI.Label(new Rect(10, 35, 400, 30),
-                $"[{addKey}] Add to Invoice", style);
+                $"[{addKey}/Circle/Button3] Add to Invoice", style);
         }
 
+        // Player 2 HUD
         if (player2LookingAt != null && !player2InvoiceOpen && player2Inside)
         {
             GUI.Label(new Rect(Screen.width - 410, 10, 400, 30),
                 $"👀 P2: {player2LookingAt.itemName} - {player2LookingAt.price} SAR", style);
             GUI.Label(new Rect(Screen.width - 410, 35, 400, 30),
-                $"[{addKey}] Add to Invoice", style);
+                $"[{addKey}/Circle/Button3] Add to Invoice", style);
         }
     }
 }
