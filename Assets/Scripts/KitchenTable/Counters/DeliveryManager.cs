@@ -78,11 +78,12 @@ public class DeliveryManager : MonoBehaviour
 
                     // �� ���� ����� ��� - ���� �� ������
                      
-if (successfulRecipesDelivered == 2)
-{
-    DelivaryUI.SetActive(false);
-} 
+
                     successfulRecipesDelivered++;
+                    if (successfulRecipesDelivered == 2)
+                    {
+                        DelivaryUI.SetActive(false);
+                    }
                     OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
                     OnRecipeCompleted?.Invoke(this, EventArgs.Empty);
                     return;

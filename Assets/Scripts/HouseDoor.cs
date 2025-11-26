@@ -60,7 +60,7 @@ public class HouseDoor : MonoBehaviour
         }
 
         // التفاعل عند الضغط على الزر (كيبورد أو يد تحكم)
-        
+        if (isPlayerNear && (Input.GetKeyDown(interactionKey) || Input.GetKeyDown(KeyCode.JoystickButton3)))
         {
             ToggleDoor();
         }

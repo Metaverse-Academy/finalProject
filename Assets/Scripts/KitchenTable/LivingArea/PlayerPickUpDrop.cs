@@ -6,6 +6,9 @@ public class PlayerPickUpDrop : MonoBehaviour
     [SerializeField] private Transform playerCameraTransform;
     [SerializeField] private Transform ObjectPointTransform;
     [SerializeField] private LayerMask pickableLayerMask;
+    public AudioSource audioSource;
+    public AudioClip grabSound;
+    public AudioClip DropAudio;
 
     private ObjectGrabbable ObjectGrabbable;
     // Update is called once per frame
@@ -20,13 +23,15 @@ public class PlayerPickUpDrop : MonoBehaviour
             {
                 if(raycastHit.transform.TryGetComponent(out ObjectGrabbable)){
                     ObjectGrabbable.Grab(ObjectPointTransform);
+                        audioSource.PlayOneShot(grabSound);
 
-                }
+                    }
             }
             }
             else
             {
                 ObjectGrabbable.Drop();
+                audioSource.PlayOneShot(DropAudio);
                 ObjectGrabbable = null;
             }
         }

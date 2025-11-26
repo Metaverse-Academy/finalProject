@@ -16,9 +16,18 @@ public class TaskStar : MonoBehaviour
     [Header("References")]
     [SerializeField] private ToyCollectionBox toyCollectionBox;
 
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public AudioClip starEarnedSound;
+
+
     private bool star1Given = false; // هل أعطيت النجمة الأولى للأطباق؟
     private bool star2Given = false; // هل أعطيت النجمة الثانية للألعاب؟
+    private bool star3Given = false; // هل أعطيت النجمة الثالثه للألعاب؟
     private int currentPlatesCount = 0;
+
+
+
 
     private void Start()
     {
@@ -71,6 +80,7 @@ public class TaskStar : MonoBehaviour
         if (!star1Given && platesCount >= plateThreshold)
         {
             GiveStar(0); // النجمة الأولى
+            audioSource.PlayOneShot(starEarnedSound);
             star1Given = true;
             Debug.Log($"⭐ النجمة الأولى - تم تسليم {platesCount} طبق!");
         }
@@ -79,20 +89,19 @@ public class TaskStar : MonoBehaviour
         if (!star2Given && toysCount >= toyThreshold)
         {
             GiveStar(1); // النجمة الثانية
+            audioSource.PlayOneShot(starEarnedSound);
             star2Given = true;
             Debug.Log($"⭐ النجمة الثانية - تم جمع {toysCount} لعبة!");
         }
 
-        // إذا كانت هناك نجمة ثالثة، يمكنك إضافة شرط آخر هنا
-        //if (starImages.Length > 2)
-        //{
-        //    // مثال: إذا اكتملت المهمتان معاً
-        //    if (!IsStarFilled(2) && star1Given && star2Given)
-        //    {
-        //        GiveStar(2); // النجمة الثالثة (مكافأة)
-        //        Debug.Log("⭐ النجمة الثالثة - مبروك إكمال المهمتين!");
-        //    }
-        //}
+        if (!star2Given && toysCount >= toyThreshold)
+        {
+            // مثال: إذا اكتملت المهمتان معاً
+            GiveStar(2); 
+            audioSource.PlayOneShot(starEarnedSound);
+            star3Given = true;
+            Debug.Log($"⭐ النجمة الثالثه - تم جمع {null} لعبة!");
+        }
     }
 
     private void GiveStar(int starIndex)
@@ -152,6 +161,7 @@ public class TaskStar : MonoBehaviour
     // خصائص للوصول إلى المعلومات
     public bool IsStar1Earned => star1Given;
     public bool IsStar2Earned => star2Given;
+    public bool IsStar3Earned => star3Given;
     public int EarnedStarsCount
     {
         get
@@ -159,6 +169,7 @@ public class TaskStar : MonoBehaviour
             int count = 0;
             if (star1Given) count++;
             if (star2Given) count++;
+            if (star3Given) count++;
             // تحقق من النجوم الإضافية
             for (int i = 2; i < starImages.Length; i++)
             {
