@@ -8011,6 +8011,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 863020484}
   m_Mesh: {fileID: -4417284452157709687, guid: 95cc2a6335cea8246b76bb24b6c4476e, type: 3}
+--- !u!1 &873344172
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 873344173}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &873344173
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 873344172}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.393, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1295853296}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &879202072
 GameObject:
   m_ObjectHideFlags: 0
@@ -8163,7 +8194,8 @@ Transform:
   m_LocalPosition: {x: -1.8923206, y: 0.29700002, z: -0.64606476}
   m_LocalScale: {x: 2.5830166, y: 2.377672, z: 9.429631}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1743897800}
   m_Father: {fileID: 1941866033}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!54 &882732846
@@ -8205,7 +8237,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 286121e3c3d1c45178d34ff64392c759, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimpleTeleport
-  destinationPoint: {fileID: 1295853296}
+  destinationPoint: {fileID: 873344173}
   playerTag: Player
   rotatePlayer: 0
   cooldownTime: 0.5
@@ -11480,6 +11512,7 @@ GameObject:
   - component: {fileID: 1295853298}
   - component: {fileID: 1295853300}
   - component: {fileID: 1295853301}
+  - component: {fileID: 1295853302}
   m_Layer: 0
   m_Name: Inside
   m_TagString: Untagged
@@ -11499,7 +11532,8 @@ Transform:
   m_LocalPosition: {x: -8.062321, y: 0.3, z: -0.616066}
   m_LocalScale: {x: 2.5830166, y: 2.377672, z: 13.628646}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 873344173}
   m_Father: {fileID: 1941866033}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!212 &1295853298
@@ -11608,6 +11642,22 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.11496238
   m_Center: {x: -0.0022765459, y: 0, z: 0}
+--- !u!114 &1295853302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1295853295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 286121e3c3d1c45178d34ff64392c759, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TeleportPoint
+  destinationPoint: {fileID: 1743897800}
+  playerTag: Player
+  rotatePlayer: 0
+  cooldownTime: 0.5
 --- !u!1 &1297376220 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 556203843582793993, guid: 5429ab52d1ee99d4699ef853c0daee3d, type: 3}
@@ -15791,6 +15841,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1729790006}
   m_CullTransparentMesh: 1
+--- !u!1 &1743897799
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1743897800}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1743897800
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1743897799}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.122, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 882732844}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1758193621
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17091,7 +17172,7 @@ MonoBehaviour:
   acceptedIcon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
   rejectedIcon: {fileID: 0}
   panelDisplayTime: 3
-  acceptedColor: {r: 0, g: 1, b: 0, a: 1}
+  acceptedColor: {r: 1, g: 1, b: 1, a: 1}
   rejectedColor: {r: 1, g: 0, b: 0, a: 1}
   validSound: {fileID: 8300000, guid: 4b22bfbdbacfa0445bc9bbfbb0141085, type: 3}
   invalidSound: {fileID: 8300000, guid: 400611abd7434234993616a86c030d1e, type: 3}
