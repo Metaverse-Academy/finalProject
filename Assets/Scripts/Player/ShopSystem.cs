@@ -165,6 +165,11 @@ public class ShopSystem : MonoBehaviour
                     OpenInvoice(2);
             }
         }
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            DebugPlayerItems(1);
+            DebugPlayerItems(2);
+        }
     }
 
     // ========== Input Helper Methods ==========
@@ -749,6 +754,17 @@ public class ShopSystem : MonoBehaviour
                 $"👀 P2: {player2LookingAt.itemName} - {player2LookingAt.price} SAR", style);
             GUI.Label(new Rect(Screen.width - 410, 35, 400, 30),
                 $"[{addKey}/Circle/Button3] Add to Invoice", style);
+        }
+    }
+
+    public void DebugPlayerItems(int playerNumber)
+    {
+        List<PurchaseItem> items = GetPlayerItems(playerNumber);
+        Debug.Log($"📦 لاعب {playerNumber} لديه {items.Count} عنصر:");
+
+        foreach (var item in items)
+        {
+            Debug.Log($"   - {item.itemName} (الاسم الأصلي: {item.objectName})");
         }
     }
 }

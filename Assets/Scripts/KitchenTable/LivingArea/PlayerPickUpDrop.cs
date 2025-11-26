@@ -45,6 +45,8 @@ public class PlayerPickUpDrop : MonoBehaviour
                     if (raycastHit.transform.TryGetComponent(out ObjectGrabbable))
                     {
                         ObjectGrabbable.Grab(ObjectPointTransform);
+                        audioSource.PlayOneShot(grabSound);
+
 
                     }
                 }
@@ -52,6 +54,7 @@ public class PlayerPickUpDrop : MonoBehaviour
             else
             {
                 ObjectGrabbable.Drop();
+                audioSource.PlayOneShot(DropAudio);
                 ObjectGrabbable = null;
             }
         }

@@ -1,17 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class TaskStar : MonoBehaviour
 {
     [Header("Star UI")]
-    [SerializeField] private Image[] starImages;       // حط هنا 3 نجوم بالترتيب
-    [SerializeField] private Sprite emptyStarSprite;   // النجمة الرماديه
-    [SerializeField] private Sprite filledStarSprite;  // النجمة الملوّنة
+    [SerializeField] private Image[] starImages;
+    [SerializeField] private Sprite emptyStarSprite;
+    [SerializeField] private Sprite filledStarSprite;
 
     [Header("Thresholds")]
-    [SerializeField] private int plateThreshold = 2;   // عتبة الأطباق للنجمة الأولى
-    [SerializeField] private int toyThreshold = 7;     // عتبة الألعاب للنجمة الثانية
+    [SerializeField] private int plateThreshold = 2;
+    [SerializeField] private int toyThreshold = 7;
 
     [Header("References")]
     [SerializeField] private ToyCollectionBox toyCollectionBox;
@@ -20,44 +21,42 @@ public class TaskStar : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip starEarnedSound;
 
-
-    private bool star1Given = false; // هل أعطيت النجمة الأولى للأطباق؟
-    private bool star2Given = false; // هل أعطيت النجمة الثانية للألعاب؟
-    private bool star3Given = false; // هل أعطيت النجمة الثالثه للألعاب؟
+    private bool star1Given = false;
+    private bool star2Given = false;
+    private bool star3Given = false;
     private int currentPlatesCount = 0;
-
-
-
+    private ShopSystem shopSystem;
 
     private void Start()
     {
-        // تأكد أن كل النجوم تبدأ فاضية
         ResetStars();
+        shopSystem = FindObjectOfType<ShopSystem>();
 
-        // اشترك مع DeliveryManager
         if (DeliveryManager.Instance != null)
         {
             DeliveryManager.Instance.OnRecipeSuccess += OnRecipeSuccess;
         }
 
-        // اشترك مع حدث جمع الألعاب
         if (toyCollectionBox != null)
         {
             toyCollectionBox.OnToyCollected += OnToyCollected;
         }
+
+        // افحص النجوم كل ثانية
+        InvokeRepeating("CheckStarsRepeatedly", 1f, 1f);
     }
 
-    private void OnDestroy()
+    private void Update()
     {
-        if (DeliveryManager.Instance != null)
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            DeliveryManager.Instance.OnRecipeSuccess -= OnRecipeSuccess;
+            CheckStarsManually();
         }
+    }
 
-        if (toyCollectionBox != null)
-        {
-            toyCollectionBox.OnToyCollected -= OnToyCollected;
-        }
+    private void CheckStarsRepeatedly()
+    {
+        CheckStars();
     }
 
     private void OnRecipeSuccess(object sender, EventArgs e)
@@ -76,32 +75,81 @@ public class TaskStar : MonoBehaviour
         int platesCount = currentPlatesCount;
         int toysCount = toyCollectionBox != null ? toyCollectionBox.CollectedToysCount : 0;
 
-        // التحقق من النجمة الأولى (الأطباق)
         if (!star1Given && platesCount >= plateThreshold)
         {
-            GiveStar(0); // النجمة الأولى
-            audioSource.PlayOneShot(starEarnedSound);
+            GiveStar(0);
+            PlayStarSound();
             star1Given = true;
             Debug.Log($"⭐ النجمة الأولى - تم تسليم {platesCount} طبق!");
         }
 
-        // التحقق من النجمة الثانية (الألعاب)
         if (!star2Given && toysCount >= toyThreshold)
         {
-            GiveStar(1); // النجمة الثانية
-            audioSource.PlayOneShot(starEarnedSound);
+            GiveStar(1);
+            PlayStarSound();
             star2Given = true;
             Debug.Log($"⭐ النجمة الثانية - تم جمع {toysCount} لعبة!");
         }
 
-        if (!star2Given && toysCount >= toyThreshold)
+        if (!star3Given && CheckForThirdStar())
         {
-            // مثال: إذا اكتملت المهمتان معاً
-            GiveStar(2); 
-            audioSource.PlayOneShot(starEarnedSound);
+            GiveStar(2);
+            PlayStarSound();
             star3Given = true;
-            Debug.Log($"⭐ النجمة الثالثه - تم جمع {null} لعبة!");
+            Debug.Log($"⭐ النجمة الثالثة - تم جمع جميع المكونات المطلوبة!");
         }
+    }
+
+    private bool CheckForThirdStar()
+    {
+        if (shopSystem == null)
+        {
+            shopSystem = FindObjectOfType<ShopSystem>();
+            if (shopSystem == null) return false;
+        }
+
+        // جمع جميع العناصر من كلا اللاعبين
+        var allItems = new List<PurchaseItem>();
+        allItems.AddRange(shopSystem.GetPlayerItems(1));
+        allItems.AddRange(shopSystem.GetPlayerItems(2));
+
+        bool hasMilk = false, hasApple = false, hasAvocado = false, hasOil = false;
+
+        Debug.Log($"🔍 عدد العناصر في الفواتير: {allItems.Count}");
+
+        foreach (var item in allItems)
+        {
+            if (item.itemName == null) continue;
+
+            string name = item.itemName.ToLower();
+            Debug.Log($"🔍 فحص: {item.itemName}");
+
+            if (name.Contains("milk"))
+            {
+                hasMilk = true;
+                Debug.Log($"✅ وجد الحليب: {item.itemName}");
+            }
+            if (name.Contains("apple"))
+            {
+                hasApple = true;
+                Debug.Log($"✅ وجد التفاح: {item.itemName}");
+            }
+            if (name.Contains("avocado"))
+            {
+                hasAvocado = true;
+                Debug.Log($"✅ وجد الأفوكادو: {item.itemName}");
+            }
+            if (name.Contains("oil"))
+            {
+                hasOil = true;
+                Debug.Log($"✅ وجد الزيت: {item.itemName}");
+            }
+        }
+
+        Debug.Log($"🎯 النتيجة: Milk={hasMilk}, Apple={hasApple}, Avocado={hasAvocado}, Oil={hasOil}");
+        Debug.Log($"🎯 النجمة الثالثة ممكن: {hasMilk && hasApple && hasAvocado && hasOil}");
+
+        return hasMilk && hasApple && hasAvocado && hasOil;
     }
 
     private void GiveStar(int starIndex)
@@ -109,42 +157,34 @@ public class TaskStar : MonoBehaviour
         if (starIndex >= 0 && starIndex < starImages.Length && starImages[starIndex] != null)
         {
             starImages[starIndex].sprite = filledStarSprite;
-
-            // إضافة تأثيرات إضافية
             PlayStarEffect(starIndex);
         }
     }
 
-    private bool IsStarFilled(int starIndex)
+    private void PlayStarSound()
     {
-        if (starIndex >= 0 && starIndex < starImages.Length && starImages[starIndex] != null)
+        if (audioSource != null && starEarnedSound != null)
         {
-            return starImages[starIndex].sprite == filledStarSprite;
+            audioSource.PlayOneShot(starEarnedSound);
         }
-        return false;
     }
 
     private void PlayStarEffect(int starIndex)
     {
-        // يمكنك إضافة تأثيرات هنا مثل:
-        // - صوت
-        // - أنيميشن
-        // - particles
-
         Debug.Log($"🎉 تم تعبئة النجمة {starIndex + 1}");
     }
 
-    // دالة للتحقق يدوياً من النجوم
     public void CheckStarsManually()
     {
+        Debug.Log("=== فحص يدوي للنجوم ===");
         CheckStars();
     }
 
-    // دالة لإعادة تعيين النجوم
     public void ResetStars()
     {
         star1Given = false;
         star2Given = false;
+        star3Given = false;
         currentPlatesCount = 0;
 
         foreach (Image star in starImages)
@@ -158,10 +198,10 @@ public class TaskStar : MonoBehaviour
         Debug.Log("🔄 تم إعادة تعيين النجوم");
     }
 
-    // خصائص للوصول إلى المعلومات
     public bool IsStar1Earned => star1Given;
     public bool IsStar2Earned => star2Given;
     public bool IsStar3Earned => star3Given;
+
     public int EarnedStarsCount
     {
         get
@@ -170,16 +210,10 @@ public class TaskStar : MonoBehaviour
             if (star1Given) count++;
             if (star2Given) count++;
             if (star3Given) count++;
-            // تحقق من النجوم الإضافية
-            for (int i = 2; i < starImages.Length; i++)
-            {
-                if (IsStarFilled(i)) count++;
-            }
             return count;
         }
     }
 
-    // دالة للحصول على تقدم المهمة
     public void GetTaskProgress(out int plates, out int platesRequired, out int toys, out int toysRequired)
     {
         plates = currentPlatesCount;
