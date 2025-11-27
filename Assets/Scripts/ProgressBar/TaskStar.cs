@@ -22,6 +22,7 @@ public class TaskStar : MonoBehaviour
     public AudioClip starEarnedSound;
 
     public GameObject WinPanel;
+    public AudioClip WinSound;
 
     private bool star1Given = false;
     private bool star2Given = false;
@@ -57,6 +58,7 @@ public class TaskStar : MonoBehaviour
         if (star3Given == true && star2Given == true && star1Given == true)
         {
             WinPanel.SetActive(true);
+            audioSource.PlayOneShot(WinSound);
             Debug.Log("جميع النجوم مكتسبة، إلغاء التحقق المتكرر.");
         }
     }
