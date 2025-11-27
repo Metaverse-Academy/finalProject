@@ -21,6 +21,8 @@ public class TaskStar : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip starEarnedSound;
 
+    public GameObject WinPanel;
+
     private bool star1Given = false;
     private bool star2Given = false;
     private bool star3Given = false;
@@ -51,6 +53,11 @@ public class TaskStar : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {
             CheckStarsManually();
+        }
+        if (star3Given == true && star2Given == true && star1Given == true)
+        {
+            WinPanel.SetActive(true);
+            Debug.Log("جميع النجوم مكتسبة، إلغاء التحقق المتكرر.");
         }
     }
 
